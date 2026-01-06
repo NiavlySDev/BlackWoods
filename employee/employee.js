@@ -1021,7 +1021,19 @@
                 return;
             }
             
-            container.innerHTML = employees.map(user => `
+            container.innerHTML = employees.map(user => {
+                // Construire les infos selon les données disponibles
+                let userInfo = `@${user.username}`;
+                if (user.personalInfo) {
+                    const info = user.personalInfo;
+                    const parts = [];
+                    if (info.gameId) parts.push(`ID: ${info.gameId}`);
+                    if (info.phone) parts.push(`📞 ${info.phone}`);
+                    if (info.discord) parts.push(`💬 ${info.discord}`);
+                    if (parts.length > 0) userInfo += ' | ' + parts.join(' | ');
+                }
+                
+                return `
                 <div class="user-card">
                     <div class="user-header">
                         <div>
@@ -1029,7 +1041,7 @@
                                 ${user.personalInfo ? `${user.personalInfo.firstName} ${user.personalInfo.lastName}` : user.username}
                             </div>
                             <div style="color: var(--cream); font-size: 0.9rem;">
-                                @${user.username}${user.personalInfo ? ` | ID: ${user.personalInfo.gameId} | ${user.personalInfo.discord}` : ''}
+                                ${userInfo}
                             </div>
                         </div>
                         <div class="user-role" style="background: ${user.role === 'admin' ? '#DC143C' : 'var(--accent-gold)'}; color: ${user.role === 'admin' ? 'white' : 'var(--dark-brown)'}; padding: 5px 15px; border-radius: 15px; font-weight: bold;">
@@ -1112,7 +1124,19 @@
                 return;
             }
             
-            container.innerHTML = clients.map(client => `
+            container.innerHTML = clients.map(client => {
+                // Construire les infos du client
+                let clientInfo = 'Informations non complétées';
+                if (client.personalInfo) {
+                    const info = client.personalInfo;
+                    const parts = [];
+                    if (info.gameId) parts.push(`ID: ${info.gameId}`);
+                    if (info.phone) parts.push(`📞 ${info.phone}`);
+                    if (info.discord) parts.push(`💬 ${info.discord}`);
+                    if (parts.length > 0) clientInfo = parts.join(' | ');
+                }
+                
+                return `
                 <div class="user-card">
                     <div class="user-header">
                         <div>
@@ -1120,7 +1144,7 @@
                                 ${client.personalInfo ? `${client.personalInfo.firstName} ${client.personalInfo.lastName}` : client.username}
                             </div>
                             <div style="color: var(--cream); font-size: 0.9rem;">
-                                ${client.personalInfo ? `ID: ${client.personalInfo.gameId} | 📞 ${client.personalInfo.phone} | 💬 ${client.personalInfo.discord}` : 'Informations non complétées'}
+                                ${clientInfo}
                             </div>
                         </div>
                         <div class="user-role">CLIENT</div>

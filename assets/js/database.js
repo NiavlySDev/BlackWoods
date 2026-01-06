@@ -132,6 +132,20 @@ class Database {
         }
     }
 
+    async updateUserRoles(userId, roles) {
+        try {
+            const response = await fetch(`${this.apiURL}/users/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roles })
+            });
+            if (!response.ok) throw new Error('Erreur lors de la mise à jour');
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async updateUserInfo(userId, updates) {
         try {
             const response = await fetch(`${this.apiURL}/users/${userId}`, {
@@ -149,6 +163,20 @@ class Database {
     // Alias pour compatibilité
     async updateUser(userId, updates) {
         return this.updateUserInfo(userId, updates);
+    }
+
+    async updateUserPIN(userId, newPIN) {
+        try {
+            const response = await fetch(`${this.apiURL}/users/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pin: String(newPIN) })
+            });
+            if (!response.ok) throw new Error('Erreur lors de la mise à jour du PIN');
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
     }
 
     async deleteUser(userId) {
