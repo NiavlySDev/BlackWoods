@@ -62,7 +62,22 @@ class Database {
             }
         }
         
-        return text ? JSON.parse(text) : null;
+        // Vérifier si la réponse est du JSON valide même quand le status est OK
+        if (contentType && contentType.includes('application/json')) {
+            return text ? JSON.parse(text) : null;
+        } else if (text && text.trim().startsWith('<')) {
+            // Réponse HTML détectée - probablement une erreur PHP
+            console.error('Réponse HTML reçue au lieu de JSON:', text);
+            throw new Error('Erreur serveur: réponse HTML inattendue');
+        } else {
+            // Essayer de parser comme JSON quand même, mais avec gestion d'erreur
+            try {
+                return text ? JSON.parse(text) : null;
+            } catch (parseError) {
+                console.error('Impossible de parser la réponse comme JSON:', text);
+                throw new Error('Format de réponse invalide');
+            }
+        }
     }
 
     // ==================== User Management ====================
