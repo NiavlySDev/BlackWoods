@@ -211,4 +211,77 @@ document.querySelectorAll('.menu-item').forEach(item => {
     });
 });
 
+// ==================== Load Menu from Database ====================
+async function loadHomeMenu() {
+    try {
+        const db = new BlackWoodsDB();
+        await db.initialize();
+        const menuItems = await db.getMenu();
+        
+        // Grouper les items par catégorie
+        const categories = {
+            plats: { title: '⭐ Nos Plats ⭐', items: [] },
+            boissons: { title: '🍹 Boissons 🍹', items: [] },
+            gourmandises: { title: '🧁 Gourmandise 🧁', items: [] }
+        };
+        
+        menuItems.forEach(item => {
+            if (item.available && categories[item.category]) {
+                categories[item.category].items.push(item);
+            }
+        });
+        
+        // Générer le HTML du menu
+        const menuContainer = document.querySelector('.menu-categories');
+        if (menuContainer) {
+            menuContainer.innerHTML = Object.values(categories).map(category => {
+                if (category.items.length === 0) return '';
+                
+                return `
+                    <div class="menu-category">
+                        <h3>${category.title}</h3>
+                        <div class="menu-items">
+                            ${category.items.map(item => `
+                                <div class="menu-item">
+                                    <div class="item-header">
+                                        <h4>${item.name}</h4>
+                                        <span class="price">${item.price}$</span>
+                                    </div>
+                                    ${item.calories ? `<p>${item.calories} kcal</p>` : ''}
+                                    ${item.description ? `<p class="item-description">${item.description}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Réappliquer les animations après chargement
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.style.opacity = '0';
+                observer.observe(item);
+                
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(10px) scale(1.02)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(10px) scale(1)';
+                });
+            });
+            
+            document.querySelectorAll('.menu-category').forEach(category => {
+                category.style.opacity = '0';
+                observer.observe(category);
+            });
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement du menu:', error);
+    }
+}
+
 // ==================== Initialize ====================
+// Charger le menu depuis la base de données au chargement de la page
+if (document.querySelector('.menu-categories')) {
+    loadHomeMenu();
+}
