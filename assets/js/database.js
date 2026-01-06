@@ -84,8 +84,8 @@ class Database {
 
     async registerUser(userData) {
         try {
-            // Générer un PIN aléatoire de 4 chiffres
-            const pin = Math.floor(1000 + Math.random() * 9000).toString();
+            // Générer un PIN aléatoire de 6 chiffres
+            const pin = Math.floor(100000 + Math.random() * 900000).toString();
             
             // Restructurer les données pour l'API
             const requestData = {

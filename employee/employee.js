@@ -337,20 +337,18 @@
             const total = employeeCart.reduce((sum, item) => sum + (item.discountedPrice * item.quantity), 0);
 
             const order = {
-                clientId: currentUser.id,
-                clientName: `${currentUser.personalInfo.firstName} ${currentUser.personalInfo.lastName} (Employé)`,
-                clientInfo: currentUser.personalInfo,
-                orderType: 'sur-place',
+                userId: currentUser.id,
+                username: `${currentUser.personalInfo.firstName} ${currentUser.personalInfo.lastName} (Employé)`,
                 items: employeeCart.map(item => ({
                     id: item.id,
                     name: item.name,
                     price: item.discountedPrice,
                     quantity: item.quantity
                 })),
-                subtotal: total,
-                deliveryFee: 0,
-                total,
-                notes: '🎉 Commande employé avec réduction de 25%'
+                totalAmount: total,
+                status: 'pending',
+                orderType: 'sur-place',
+                assignedTo: null
             };
 
             try {
@@ -810,9 +808,23 @@
 
         document.getElementById('changePinForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
 
             if (currentPinInput.length !== 6 || newPinInput.length !== 6 || confirmPinInput.length !== 6) {
+                // Animation erreur sur les inputs
+                document.querySelectorAll('.pin-input-group input').forEach(input => {
+                    input.style.animation = 'shake 0.5s';
+                    input.style.borderColor = '#dc3545';
+                });
                 showNotification('Les codes PIN doivent contenir 6 chiffres', true);
+                setTimeout(() => {
+                    document.querySelectorAll('.pin-input-group input').forEach(input => {
+                        input.style.animation = '';
+                        input.style.borderColor = '';
+                    });
+                }, 500);
                 return;
             }
 
@@ -820,20 +832,56 @@
             const user = users.find(u => u.id === currentUser.id);
             
             if (user.pin !== currentPinInput) {
+                // Animation erreur sur PIN actuel
+                document.querySelectorAll('#currentPin .pin-digit').forEach(input => {
+                    input.style.animation = 'shake 0.5s';
+                    input.style.borderColor = '#dc3545';
+                });
                 showNotification('Code PIN actuel incorrect', true);
                 clearPinInput('current');
+                setTimeout(() => {
+                    document.querySelectorAll('#currentPin .pin-digit').forEach(input => {
+                        input.style.animation = '';
+                        input.style.borderColor = '';
+                    });
+                }, 500);
                 return;
             }
 
             if (newPinInput !== confirmPinInput) {
+                // Animation erreur sur nouveaux PINs
+                document.querySelectorAll('#newPin .pin-digit, #confirmPin .pin-digit').forEach(input => {
+                    input.style.animation = 'shake 0.5s';
+                    input.style.borderColor = '#dc3545';
+                });
                 showNotification('Les nouveaux codes PIN ne correspondent pas', true);
                 clearPinInput('new');
                 clearPinInput('confirm');
+                setTimeout(() => {
+                    document.querySelectorAll('#newPin .pin-digit, #confirmPin .pin-digit').forEach(input => {
+                        input.style.animation = '';
+                        input.style.borderColor = '';
+                    });
+                }, 500);
                 return;
             }
 
             try {
+                // Animation bouton loading
+                submitBtn.disabled = true;
+                submitBtn.textContent = '🔄 Changement en cours...';
+                submitBtn.style.opacity = '0.7';
+                
                 await db.updateUserPIN(currentUser.id, newPinInput);
+                
+                // Animation succès
+                document.querySelectorAll('.pin-digit').forEach(input => {
+                    input.style.borderColor = '#28a745';
+                    input.style.animation = 'pulse 0.5s';
+                });
+                submitBtn.textContent = '✅ Changé !';
+                submitBtn.style.background = '#28a745';
+                
                 showNotification('✅ Code PIN modifié avec succès !');
                 currentPinInput = '';
                 newPinInput = '';
@@ -841,8 +889,34 @@
                 updatePinDisplay('current');
                 updatePinDisplay('new');
                 updatePinDisplay('confirm');
+                
+                // Réinitialiser le bouton après 2s
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.style.background = '';
+                    document.querySelectorAll('.pin-digit').forEach(input => {
+                        input.style.borderColor = '';
+                        input.style.animation = '';
+                    });
+                }, 2000);
             } catch (error) {
+                // Animation erreur
+                document.querySelectorAll('.pin-digit').forEach(input => {
+                    input.style.animation = 'shake 0.5s';
+                    input.style.borderColor = '#dc3545';
+                });
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                submitBtn.style.opacity = '1';
                 showNotification('❌ Erreur lors du changement de PIN', true);
+                setTimeout(() => {
+                    document.querySelectorAll('.pin-digit').forEach(input => {
+                        input.style.animation = '';
+                        input.style.borderColor = '';
+                    });
+                }, 500);
             }
         });
 
