@@ -426,7 +426,14 @@
                 await loadOrderHistory();
                 showNotification('✅ Commande annulée avec succès');
             } catch (error) {
-                showNotification('❌ Erreur lors de l\'annulation', true);
+                // Si l'erreur est liée à une réponse HTML mais que l'annulation pourrait avoir réussi
+                if (error.message && error.message.includes('réponse HTML inattendue')) {
+                    // Rafraîchir l'historique pour voir si l'annulation a bien eu lieu
+                    await loadOrderHistory();
+                    showNotification('⚠️ Commande probablement annulée (erreur serveur)');
+                } else {
+                    showNotification('❌ Erreur lors de l\'annulation', true);
+                }
             }
         }
 

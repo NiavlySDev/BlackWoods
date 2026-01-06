@@ -62,13 +62,13 @@ class Database {
             }
         }
         
-        // Vérifier si la réponse est du JSON valide même quand le status est OK
-        if (contentType && contentType.includes('application/json')) {
-            return text ? JSON.parse(text) : null;
-        } else if (text && text.trim().startsWith('<')) {
+        // Vérifier d'abord le contenu réel, pas seulement le Content-Type
+        if (text && text.trim().startsWith('<')) {
             // Réponse HTML détectée - probablement une erreur PHP
             console.error('Réponse HTML reçue au lieu de JSON:', text);
             throw new Error('Erreur serveur: réponse HTML inattendue');
+        } else if (contentType && contentType.includes('application/json')) {
+            return text ? JSON.parse(text) : null;
         } else {
             // Essayer de parser comme JSON quand même, mais avec gestion d'erreur
             try {
