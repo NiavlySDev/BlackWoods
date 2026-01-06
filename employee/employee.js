@@ -88,8 +88,8 @@
                     </div>
                     
                     <div class="order-client">
-                        👤 Client: <strong>${order.clientName}</strong><br>
-                        ${order.orderType === 'a-emporter' ? `📦 À emporter - ${order.deliveryLocation}` : '🍽️ Sur place'}
+                        👤 Client: <strong>${order.username || order.clientName || 'Non renseigné'}</strong><br>
+                        ${order.orderType === 'a-emporter' ? `📦 À emporter - ${order.deliveryLocation || 'Lieu non spécifié'}` : '🍽️ Sur place'}
                     </div>
 
                     ${order.clientInfo ? `
@@ -126,7 +126,7 @@
 
                     <div class="order-total">
                         <span>Total:</span>
-                        <span>${order.total}$</span>
+                        <span>${order.totalAmount || order.total || 0}$</span>
                     </div>
 
                     ${order.notes ? `
@@ -338,7 +338,9 @@
 
             const order = {
                 userId: currentUser.id,
-                username: `${currentUser.personalInfo.firstName} ${currentUser.personalInfo.lastName} (Employé)`,
+                username: currentUser.personalInfo 
+                    ? `${currentUser.personalInfo.firstName} ${currentUser.personalInfo.lastName} (Employé)`
+                    : `${currentUser.username} (Employé)`,
                 items: employeeCart.map(item => ({
                     id: item.id,
                     name: item.name,
@@ -368,7 +370,7 @@
         // ==================== HISTORIQUE COMMANDES EMPLOYÉ ====================
         async function loadEmployeeOrderHistory() {
             const orders = await db.getOrders();
-            const myOrders = orders.filter(o => o.clientId === currentUser.id);
+            const myOrders = orders.filter(o => o.userId === currentUser.id);
             
             const historyContainer = document.getElementById('employeeOrdersHistory');
             
@@ -419,7 +421,7 @@
                         
                         <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.2);">
                             <span style="color: var(--cream);">${order.orderType === 'a-emporter' ? '📦 À emporter' : '🍽️ Sur place'}</span>
-                            <strong style="color: var(--accent-gold); font-size: 1.2rem;">${order.total}$</strong>
+                            <strong style="color: var(--accent-gold); font-size: 1.2rem;">${order.totalAmount || order.total || 0}$</strong>
                         </div>
                         
                         ${canEdit && !isCompleted && order.status !== 'cancelled' ? `
