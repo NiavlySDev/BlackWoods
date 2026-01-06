@@ -6,16 +6,25 @@ global $pdo, $requestMethod, $pathParts;
 switch ($requestMethod) {
     case 'GET':
         // GET /api/users - Récupérer tous les utilisateurs
-        $stmt = $pdo->query("SELECT id, username, pin, role, roles, personalInfo, createdAt, updatedAt FROM users ORDER BY createdAt DESC");
-        $users = $stmt->fetchAll();
-        
-        // Convertir les JSON strings en objets
-        foreach ($users as &$user) {
-            $user['roles'] = $user['roles'] ? json_decode($user['roles']) : [];
-            $user['personalInfo'] = $user['personalInfo'] ? json_decode($user['personalInfo']) : null;
+        try {
+            $stmt = $pdo->query("SELECT id, username, pin, role, roles, personalInfo, createdAt, updatedAt FROM users ORDER BY createdAt DESC");
+            $users = $stmt->fetchAll();
+            
+            // Convertir les JSON strings en objets
+            foreach ($users as &$user) {
+                $user['roles'] = $user['roles'] ? json_decode($user['roles']) : [];
+                $user['personalInfo'] = $user['personalInfo'] ? json_decode($user['personalInfo']) : null;
+            }
+            
+            echo json_encode($users);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode([
+                'error' => 'Erreur lors de la récupération des utilisateurs',
+                'details' => $e->getMessage(),
+                'hint' => 'Avez-vous importé la base de données ? Exécutez: mysql -h ... < database/setup.sql'
+            ]);
         }
-        
-        echo json_encode($users);
         break;
 
     case 'POST':

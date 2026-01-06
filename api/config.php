@@ -9,7 +9,12 @@ if (!file_exists($configFile)) {
     http_response_code(500);
     echo json_encode([
         'error' => 'Fichier de configuration manquant',
-        'details' => 'Créez le fichier api/config.db.json avec vos identifiants MySQL'
+        'details' => 'Créez le fichier api/config.db.json avec vos identifiants MySQL',
+        'debug' => [
+            'looking_for' => $configFile,
+            'dir' => __DIR__,
+            'files_in_dir' => scandir(__DIR__)
+        ]
     ]);
     exit();
 }
