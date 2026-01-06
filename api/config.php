@@ -74,7 +74,7 @@ function sendDiscordNotification($config, $order, $action) {
     ];
 
     $itemsList = [];
-    $items = json_decode($order['items'], true);
+    $items = is_string($order['items']) ? json_decode($order['items'], true) : $order['items'];
     foreach ($items as $item) {
         $itemsList[] = "• {$item['quantity']}x {$item['name']} ({$item['price']}$)";
     }

@@ -375,9 +375,26 @@ class Database {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(order)
             });
-            if (!response.ok) throw new Error('Erreur lors de la création de la commande');
-            return await response.json();
+            
+            const contentType = response.headers.get('content-type');
+            const text = await response.text();
+            
+            if (!response.ok) {
+                // Si c'est du JSON, parser l'erreur
+                if (contentType && contentType.includes('application/json')) {
+                    const error = JSON.parse(text);
+                    throw new Error(error.error || 'Erreur lors de la création de la commande');
+                } else {
+                    // Si c'est du HTML/texte, c'est une erreur PHP
+                    console.error('Erreur serveur:', text);
+                    throw new Error(`Erreur serveur (${response.status}): Vérifiez les logs PHP`);
+                }
+            }
+            
+            // Parse le JSON si succès
+            return JSON.parse(text);
         } catch (error) {
+            console.error('Erreur createOrder:', error);
             throw error;
         }
     }
