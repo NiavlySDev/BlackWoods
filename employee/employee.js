@@ -164,16 +164,16 @@
                     if (canPrepare) {
                         if (!order.assignedTo) {
                             actions += `
-                                <button class="btn-action" style="background: var(--accent-gold); color: var(--dark-brown);" onclick="assignOrderToMe(${order.id})">
+                                <button class="btn-action" style="background: var(--accent-gold); color: var(--dark-brown);" onclick="assignOrderToMe('${order.id}')">
                                     ✋ Prendre la commande
                                 </button>
                             `;
                         } else if (isAssignedToMe) {
                             actions += `
-                                <button class="btn-action btn-accept" onclick="updateOrderStatus(${order.id}, 'preparing')">
+                                <button class="btn-action btn-accept" onclick="updateOrderStatus('${order.id}', 'preparing')">
                                     👨‍🍳 Commencer la préparation
                                 </button>
-                                <button class="btn-action btn-cancel" onclick="updateOrderStatus(${order.id}, 'cancelled')">
+                                <button class="btn-action btn-cancel" onclick="updateOrderStatus('${order.id}', 'cancelled')">
                                     ❌ Annuler
                                 </button>
                             `;
@@ -183,10 +183,10 @@
                 case 'preparing':
                     if (canPrepare && (isAssignedToMe || !order.assignedTo)) {
                         return `
-                            <button class="btn-action btn-complete" onclick="updateOrderStatus(${order.id}, 'ready')">
+                            <button class="btn-action btn-complete" onclick="updateOrderStatus('${order.id}', 'ready')">
                                 ✅ Marquer comme prête
                             </button>
-                            <button class="btn-action btn-cancel" onclick="updateOrderStatus(${order.id}, 'cancelled')">
+                            <button class="btn-action btn-cancel" onclick="updateOrderStatus('${order.id}', 'cancelled')">
                                 ❌ Annuler
                             </button>
                         `;
@@ -195,7 +195,7 @@
                 case 'ready':
                     if ((canCounter || canDeliver) && (isAssignedToMe || !order.assignedTo)) {
                         return `
-                            <button class="btn-action btn-accept" onclick="updateOrderStatus(${order.id}, 'completed')">
+                            <button class="btn-action btn-accept" onclick="updateOrderStatus('${order.id}', 'completed')">
                                 ✔️ Marquer comme livrée
                             </button>
                         `;
@@ -253,9 +253,9 @@
                                     </div>
                                 </div>
                                 <div class="quantity-controls">
-                                    <button class="btn-qty" onclick="changeEmployeeQuantity(${item.id}, -1)">−</button>
+                                    <button class="btn-qty" onclick="changeEmployeeQuantity('${item.id}', -1)">−</button>
                                     <div class="qty-display" id="emp-qty-${item.id}">0</div>
-                                    <button class="btn-qty" onclick="changeEmployeeQuantity(${item.id}, 1)">+</button>
+                                    <button class="btn-qty" onclick="changeEmployeeQuantity('${item.id}', 1)">+</button>
                                 </div>
                             </div>
                         `;
@@ -426,11 +426,11 @@
                         
                         ${canEdit && !isCompleted && order.status !== 'cancelled' ? `
                             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                <button onclick="openEmployeeEditModal(${order.id})" style="flex: 1; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                <button onclick="openEmployeeEditModal('${order.id}')" style="flex: 1; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
                                     ✏️ Modifier ${canEditLocation ? 'le lieu' : 'la commande'}
                                 </button>
                                 ${order.status !== 'ready' && order.status !== 'completed' ? `
-                                    <button onclick="cancelEmployeeOrder(${order.id})" style="flex: 1; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                    <button onclick="cancelEmployeeOrder('${order.id}')" style="flex: 1; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
                                         ❌ Annuler
                                     </button>
                                 ` : ''}
@@ -582,7 +582,7 @@
                 return `
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px; margin-bottom: 8px;">
                         <span style="color: var(--text-light);">${item.name} - ${discountedPrice}$ <span style="font-size: 0.8rem; color: #28a745;">(-25%)</span></span>
-                        <button onclick="addItemToEmployeeEditOrder(${item.id}, '${safeName}', ${discountedPrice})" style="padding: 5px 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
+                        <button onclick="addItemToEmployeeEditOrder('${item.id}', '${safeName}', ${discountedPrice})" style="padding: 5px 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
                             + Ajouter
                         </button>
                     </div>
@@ -926,10 +926,10 @@
                         ${request.message}
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn-action btn-accept" onclick="approveEmployeeRequest(${request.id})">
+                        <button class="btn-action btn-accept" onclick="approveEmployeeRequest('${request.id}')">
                             ✅ Approuver
                         </button>
-                        <button class="btn-action btn-cancel" onclick="rejectEmployeeRequest(${request.id})">
+                        <button class="btn-action btn-cancel" onclick="rejectEmployeeRequest('${request.id}')">
                             ❌ Refuser
                         </button>
                     </div>
@@ -986,10 +986,10 @@
                         </div>
                     ` : ''}
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn-action btn-accept" onclick="approveRoleRequest(${request.id})">
+                        <button class="btn-action btn-accept" onclick="approveRoleRequest('${request.id}')">
                             ✅ Approuver
                         </button>
-                        <button class="btn-action btn-cancel" onclick="rejectRoleRequest(${request.id})">
+                        <button class="btn-action btn-cancel" onclick="rejectRoleRequest('${request.id}')">
                             ❌ Refuser
                         </button>
                     </div>
@@ -1055,17 +1055,17 @@
                             <div style="margin-top: 10px;">
                                 <label class="checkbox-label">
                                     <input type="checkbox" ${user.roles && user.roles.includes('Comptoir') ? 'checked' : ''} 
-                                           onchange="toggleUserRole(${user.id}, 'Comptoir', this.checked)">
+                                           onchange="toggleUserRole('${user.id}', 'Comptoir', this.checked)">
                                     Comptoir
                                 </label>
                                 <label class="checkbox-label">
                                     <input type="checkbox" ${user.roles && user.roles.includes('Livraison') ? 'checked' : ''} 
-                                           onchange="toggleUserRole(${user.id}, 'Livraison', this.checked)">
+                                           onchange="toggleUserRole('${user.id}', 'Livraison', this.checked)">
                                     Livraison
                                 </label>
                                 <label class="checkbox-label">
                                     <input type="checkbox" ${user.roles && user.roles.includes('Préparation') ? 'checked' : ''} 
-                                           onchange="toggleUserRole(${user.id}, 'Préparation', this.checked)">
+                                           onchange="toggleUserRole('${user.id}', 'Préparation', this.checked)">
                                     Préparation
                                 </label>
                             </div>
@@ -1074,11 +1074,11 @@
                     
                     <div style="margin-top: 15px; display: flex; gap: 10px;">
                         ${user.role === 'employee' ? `
-                            <button class="btn-action btn-accept" style="flex: 1; background: #DC143C;" onclick="promoteToAdmin(${user.id})">
+                            <button class="btn-action btn-accept" style="flex: 1; background: #DC143C;" onclick="promoteToAdmin('${user.id}')">
                                 👑 Promouvoir Admin
                             </button>
                         ` : user.id !== currentUser.id ? `
-                            <button class="btn-action btn-cancel" style="flex: 1;" onclick="demoteFromAdmin(${user.id})">
+                            <button class="btn-action btn-cancel" style="flex: 1;" onclick="demoteFromAdmin('${user.id}')">
                                 ⬇️ Rétrograder Employé
                             </button>
                         ` : `
@@ -1087,7 +1087,7 @@
                             </div>
                         `}
                         ${user.id !== currentUser.id ? `
-                            <button class="btn-action btn-cancel" style="flex: 1;" onclick="deleteUser(${user.id})">
+                            <button class="btn-action btn-cancel" style="flex: 1;" onclick="deleteUser('${user.id}')">
                                 🗑️ Supprimer
                             </button>
                         ` : ''}
@@ -1150,10 +1150,10 @@
                         <div class="user-role">CLIENT</div>
                     </div>
                     <div style="margin-top: 10px; display: flex; gap: 10px;">
-                        <button class="btn-action btn-accept" style="flex: 1;" onclick="promoteToEmployee(${client.id})">
+                        <button class="btn-action btn-accept" style="flex: 1;" onclick="promoteToEmployee('${client.id}')">
                             ⬆️ Promouvoir employé
                         </button>
-                        <button class="btn-action btn-cancel" style="flex: 1;" onclick="deleteUser(${client.id})">
+                        <button class="btn-action btn-cancel" style="flex: 1;" onclick="deleteUser('${client.id}')">
                             🗑️ Supprimer
                         </button>
                     </div>
@@ -1212,8 +1212,8 @@
                         <option value="gourmandises" ${item.category === 'gourmandises' ? 'selected' : ''}>Gourmandises</option>
                     </select>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn-update" onclick="updateMenuItem(${item.id})">💾</button>
-                        <button class="btn-delete" onclick="deleteMenuItem(${item.id})">🗑️</button>
+                        <button class="btn-update" onclick="updateMenuItem('${item.id}')">💾</button>
+                        <button class="btn-delete" onclick="deleteMenuItem('${item.id}')">🗑️</button>
                     </div>
                 </div>
             `).join('');
