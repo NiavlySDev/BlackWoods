@@ -276,33 +276,28 @@
             const total = subtotal + deliveryFee;
 
             const order = {
-                clientId: currentUser.id,
-                clientName: `${firstName} ${lastName}`,
-                clientInfo: {
-                    firstName,
-                    lastName,
-                    gameId,
-                    phone,
-                    discord
-                },
-                orderType,
-                deliveryLocation: orderType === 'a-emporter' ? deliveryLocation : null,
+                userId: currentUser.id,
+                username: `${firstName} ${lastName}`,
                 items: cart.map(item => ({
                     id: item.id,
                     name: item.name,
                     price: item.price,
                     quantity: item.quantity
                 })),
-                subtotal,
-                deliveryFee,
-                total,
-                notes
+                totalAmount: total,
+                status: 'pending',
+                orderType: orderType === 'a-emporter' ? 'a-emporter' : 'sur-place',
+                assignedTo: null
             };
 
+            // Trouver le bouton commander dans le panier
+            const placeOrderBtn = document.querySelector('.cart-footer button') || document.querySelector('[onclick*="placeOrder"]');
+            
             try {
-                const btn = event.target;
-                btn.disabled = true;
-                btn.textContent = 'Commande en cours...';
+                if (placeOrderBtn) {
+                    placeOrderBtn.disabled = true;
+                    placeOrderBtn.textContent = 'Commande en cours...';
+                }
 
                 await db.createOrder(order);
 
@@ -333,15 +328,18 @@
                 loadOrderHistory();
 
             } catch (error) {
-                showNotification('❌ Erreur lors de la commande', true);
-                btn.disabled = false;
-                btn.textContent = `🛎️ Commander - ${total}$`;
+                console.error('Erreur commande:', error);
+                showNotification(`❌ ${error.message || 'Erreur lors de la commande'}`, true);
+                if (placeOrderBtn) {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.textContent = `🔔️ Commander - ${total}$`;
+                }
             }
         }
 
         async function loadOrderHistory() {
             const orders = await db.getOrders();
-            const myOrders = orders.filter(o => o.clientId === currentUser.id);
+            const myOrders = orders.filter(o => o.userId === currentUser.id);
             
             const ordersHistory = document.getElementById('ordersHistory');
             
@@ -386,7 +384,7 @@
                         </div>
                         <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.2);">
                             <span style="color: var(--cream);">${order.orderType === 'a-emporter' ? '📦 À emporter' : '🍽️ Sur place'}</span>
-                            <strong style="color: var(--accent-gold); font-size: 1.2rem;">${order.total}$</strong>
+                            <strong style="color: var(--accent-gold); font-size: 1.2rem;">${order.totalAmount || order.total || 0}$</strong>
                         </div>
                         
                         ${canEdit && !isCompleted && order.status !== 'cancelled' ? `
