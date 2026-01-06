@@ -1093,7 +1093,8 @@
                         ` : ''}
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         async function toggleUserRole(userId, role, isChecked) {
