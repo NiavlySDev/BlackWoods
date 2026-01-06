@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Black Woods</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%238B4513" width="1200" height="800"/><path fill="%23654321" d="M0,400 Q300,350 600,400 T1200,400 V800 H0 Z"/></svg>');
+            background-size: cover;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .register-box {
+            background: rgba(26, 20, 16, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 100%;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-header h1 {
+            font-family: 'Rye', cursive;
+            color: var(--accent-gold);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            color: var(--cream);
+            font-size: 1rem;
+        }
+
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            color: var(--accent-gold);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-register {
+            padding: 15px;
+            background: var(--accent-gold);
+            color: var(--dark-brown);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Crimson Text', serif;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover:not(:disabled) {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--cream);
+        }
+
+        .register-footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .register-footer a:hover {
+            color: var(--secondary-color);
+        }
+
+        .error-message, .success-message {
+            padding: 12px;
+            border-radius: 5px;
+            display: none;
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #ff6b6b;
+        }
+
+        .success-message {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #5dffb3;
+        }
+
+        .pin-display {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--accent-gold);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .pin-display h3 {
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .pin-code {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            letter-spacing: 5px;
+            font-family: monospace;
+        }
+
+        .pin-warning {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-link a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: var(--accent-gold);
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .register-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <div class="register-header">
+                <h1>BLACK WOODS</h1>
+                <p>Créer un compte client</p>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <form class="register-form" id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">Prénom *</label>
+                        <input type="text" id="firstName" placeholder="John" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Nom *</label>
+                        <input type="text" id="lastName" placeholder="Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gameId">ID du jeu *</label>
+                    <input type="text" id="gameId" placeholder="12345" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Téléphone *</label>
+                    <input type="tel" id="phone" placeholder="37833-12345" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="discord">Discord *</label>
+                    <input type="text" id="discord" placeholder="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur *</label>
+                    <input type="text" id="username" placeholder="Choisissez un nom d'utilisateur" required>
+                </div>
+
+                <button type="submit" class="btn-register" id="submitBtn">
+                    Créer mon compte
+                </button>
+            </form>
+
+            <div id="pinDisplay" class="pin-display">
+                <h3>🔐 Votre code PIN</h3>
+                <div class="pin-code" id="pinCode"></div>
+                <p class="pin-warning">
+                    ⚠️ Notez bien ce code ! Vous en aurez besoin pour vous connecter.
+                </p>
+                <button class="btn-register" onclick="window.location.href='login.html'" style="margin-top: 15px;">
+                    Se connecter
+                </button>
+            </div>
+
+            <div class="register-footer">
+                Vous avez déjà un compte ? <a href="login.html">Se connecter</a>
+            </div>
+
+            <div class="back-link">
+                <a href="index.html">← Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="database.js"></script>
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const pinDisplay = document.getElementById('pinDisplay');
+        const submitBtn = document.getElementById('submitBtn');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            const userData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                gameId: document.getElementById('gameId').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                discord: document.getElementById('discord').value.trim(),
+                username: document.getElementById('username').value.trim()
+            };
+
+            // Validation
+            if (!userData.firstName || !userData.lastName || !userData.gameId || 
+                !userData.phone || !userData.discord || !userData.username) {
+                showError('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Création en cours...';
+
+                const newUser = await db.registerUser(userData);
+                
+                // Afficher le PIN
+                document.getElementById('pinCode').textContent = newUser.pin;
+                registerForm.style.display = 'none';
+                pinDisplay.style.display = 'block';
+                
+                successMessage.textContent = 'Compte créé avec succès !';
+                successMessage.style.display = 'block';
+
+            } catch (error) {
+                showError(error.message || 'Erreur lors de la création du compte');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Créer mon compte';
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
