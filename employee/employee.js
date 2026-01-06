@@ -1159,7 +1159,8 @@
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         async function promoteToEmployee(userId) {
