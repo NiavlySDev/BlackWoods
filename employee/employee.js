@@ -354,7 +354,7 @@
             };
 
             try {
-                await db.createOrder(order);
+                const result = await db.createOrder(order);
                 showNotification('✅ Commande passée avec succès !');
                 employeeCart = [];
                 updateEmployeeQuantityDisplays();
@@ -363,7 +363,8 @@
                 // Recharger l'historique des commandes
                 await loadEmployeeOrderHistory();
             } catch (error) {
-                showNotification('❌ Erreur lors de la commande', true);
+                console.error('Erreur commande:', error);
+                showNotification(`❌ ${error.message || 'Erreur lors de la commande'}`, true);
             }
         }
 

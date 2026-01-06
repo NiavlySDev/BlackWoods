@@ -84,9 +84,9 @@
                                     </div>
                                     <div class="item-price">${item.price}$</div>
                                     <div class="quantity-controls">
-                                        <button class="btn-qty" onclick="changeQuantity(${item.id}, -1)">−</button>
+                                        <button class="btn-qty" onclick="changeQuantity('${item.id}', -1)">−</button>
                                         <div class="qty-display" id="qty-${item.id}">0</div>
-                                        <button class="btn-qty" onclick="changeQuantity(${item.id}, 1)">+</button>
+                                        <button class="btn-qty" onclick="changeQuantity('${item.id}', 1)">+</button>
                                     </div>
                                 </div>
                             `).join('')}
@@ -203,7 +203,7 @@
                                 <div class="cart-item-qty">Quantité: ${item.quantity}</div>
                             </div>
                             <div class="cart-item-price">${item.price * item.quantity}$</div>
-                            <button class="btn-remove" onclick="removeFromCart(${item.id})">×</button>
+                            <button class="btn-remove" onclick="removeFromCart('${item.id}')">×</button>
                         </div>
                     `).join('')}
                 </div>
@@ -391,11 +391,11 @@
                         
                         ${canEdit && !isCompleted && order.status !== 'cancelled' ? `
                             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                <button onclick="openEditModal(${order.id})" style="flex: 1; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                <button onclick="openEditModal('${order.id}')" style="flex: 1; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
                                     ✏️ Modifier ${canEditLocation ? 'le lieu' : 'la commande'}
                                 </button>
                                 ${order.status !== 'ready' && order.status !== 'completed' ? `
-                                    <button onclick="cancelOrder(${order.id})" style="flex: 1; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                    <button onclick="cancelOrder('${order.id}')" style="flex: 1; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
                                         ❌ Annuler
                                     </button>
                                 ` : ''}
@@ -756,14 +756,17 @@
             const menuItems = await db.getMenu();
             const container = document.getElementById('availableMenuItems');
             
-            container.innerHTML = menuItems.map(item => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px; margin-bottom: 8px;">
-                    <span style="color: var(--text-light);">${item.name} - ${item.price}$</span>
-                    <button onclick="addItemToEditOrder(${item.id}, '${item.name.replace(/'/g, "\\'")}', ${item.price})" style="padding: 5px 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
-                        + Ajouter
-                    </button>
-                </div>
-            `).join('');
+            container.innerHTML = menuItems.map(item => {
+                const safeName = item.name.replace(/'/g, "\\'");
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px; margin-bottom: 8px;">
+                        <span style="color: var(--text-light);">${item.name} - ${item.price}$</span>
+                        <button onclick="addItemToEditOrder('${item.id}', '${safeName}', ${item.price})" style="padding: 5px 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
+                            + Ajouter
+                        </button>
+                    </div>
+                `;
+            }).join('');
         }
 
         function addItemToEditOrder(itemId, itemName, itemPrice) {
