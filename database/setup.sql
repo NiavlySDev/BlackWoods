@@ -89,17 +89,17 @@ CREATE TABLE IF NOT EXISTS role_requests (
 
 -- Utilisateur admin par défaut
 INSERT INTO users (id, username, pin, role, personalInfo) VALUES 
-('admin-001', 'admin', '123456', 'admin', '{"lastName":"Administrateur","firstName":"Système","age":"","address":""}')
+('admin-001', 'admin', '123456', 'admin', '{"firstName":"Système","lastName":"Administrateur","age":"","address":"","gameId":"","phone":"","discord":""}')
 ON DUPLICATE KEY UPDATE pin='123456', role='admin';
 
 -- Utilisateur employé par défaut
 INSERT INTO users (id, username, pin, role, roles, personalInfo) VALUES 
-('employee-001', 'employee', '654321', 'employee', '["cuisine", "service"]', '{"lastName":"Employé","firstName":"Test","age":"25","address":""}')
+('employee-001', 'employee', '654321', 'employee', '["cuisine", "service"]', '{"firstName":"Test","lastName":"Employé","age":"25","address":"","gameId":"","phone":"","discord":""}')
 ON DUPLICATE KEY UPDATE pin='654321', role='employee', roles='["cuisine", "service"]';
 
 -- Utilisateur client par défaut
 INSERT INTO users (id, username, pin, role, personalInfo) VALUES 
-('client-001', 'client', '111111', 'client', '{"lastName":"Client","firstName":"Test","age":"30","address":"123 Rue Test"}')
+('client-001', 'client', '111111', 'client', '{"firstName":"Test","lastName":"Client","age":"30","address":"123 Rue Test","gameId":"12345","phone":"0612345678","discord":"test#1234"}')
 ON DUPLICATE KEY UPDATE pin='111111', role='client';
 
 -- Menu par défaut

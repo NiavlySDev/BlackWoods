@@ -1166,9 +1166,7 @@
 
         async function deleteUser(userId) {
             if (confirm('⚠️ Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) {
-                const users = await db.getUsers();
-                const filteredUsers = users.filter(u => u.id !== userId);
-                localStorage.setItem('blackwoods_users', JSON.stringify(filteredUsers));
+                await db.deleteUser(userId);
                 showNotification('✅ Utilisateur supprimé');
                 loadClientsList();
                 loadUsersList();

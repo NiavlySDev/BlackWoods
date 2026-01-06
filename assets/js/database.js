@@ -84,10 +84,29 @@ class Database {
 
     async registerUser(userData) {
         try {
+            // Générer un PIN aléatoire de 4 chiffres
+            const pin = Math.floor(1000 + Math.random() * 9000).toString();
+            
+            // Restructurer les données pour l'API
+            const requestData = {
+                username: userData.username,
+                pin: pin,
+                role: 'client',
+                personalInfo: {
+                    firstName: userData.firstName || '',
+                    lastName: userData.lastName || '',
+                    age: userData.age || '',
+                    address: userData.address || '',
+                    gameId: userData.gameId || '',
+                    phone: userData.phone || '',
+                    discord: userData.discord || ''
+                }
+            };
+            
             const response = await fetch(`${this.apiURL}/users`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
+                body: JSON.stringify(requestData)
             });
             if (!response.ok) {
                 const error = await response.json();
@@ -121,6 +140,23 @@ class Database {
                 body: JSON.stringify(updates)
             });
             if (!response.ok) throw new Error('Erreur lors de la mise à jour');
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Alias pour compatibilité
+    async updateUser(userId, updates) {
+        return this.updateUserInfo(userId, updates);
+    }
+
+    async deleteUser(userId) {
+        try {
+            const response = await fetch(`${this.apiURL}/users/${userId}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('Erreur lors de la suppression');
             return await response.json();
         } catch (error) {
             throw error;
