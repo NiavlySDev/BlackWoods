@@ -3,6 +3,7 @@
 # Configuration sensible
 assets/config.json
 config.json
+api/config.db.json
 .env
 
 # Logs

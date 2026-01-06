@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Charger la configuration depuis config.json
-$configFile = __DIR__ . '/../assets/config.json';
+// Charger la configuration depuis config.db.json (protégé)
+$configFile = __DIR__ . '/config.db.json';
 $config = json_decode(file_get_contents($configFile), true);
 
 if (!$config || !isset($config['database'])) {

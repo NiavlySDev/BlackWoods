@@ -14,7 +14,7 @@
 </IfModule>
 
 # Empêcher l'accès direct aux fichiers sensibles
-<FilesMatch "^(config\.json|\.env)$">
+<FilesMatch "^(db\.config\.json|\.env|config\.db\.json)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
