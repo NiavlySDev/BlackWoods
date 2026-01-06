@@ -1,1 +1,64 @@
+# ==================== Black Woods - .gitignore ====================
+
+# Configuration sensible
 assets/config.json
+config.json
+.env
+
+# Logs
+*.log
+logs/
+error.log
+access.log
+
+# Base de données locale
+*.sql.backup
+backup/
+*.dump
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Node modules (si ajouté plus tard)
+node_modules/
+package-lock.json
+
+# PHP
+vendor/
+composer.lock
+
+# Cache
+cache/
+tmp/
+*.cache
+
+# Uploads
+uploads/
+user-uploads/
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Desktop.ini
+$RECYCLE.BIN/
+
+# Fichiers de session
+sessions/
+*.session
+
+# Fichiers de développement
+test.php
+debug.php
+phpinfo.php

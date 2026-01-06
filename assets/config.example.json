@@ -1,0 +1,11 @@
+{
+    "discordWebhook": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+    "mentionRoleId": "YOUR_ROLE_ID",
+    "database": {
+        "host": "your-mysql-host.com",
+        "port": 3306,
+        "database": "your_database_name",
+        "user": "your_database_user",
+        "password": "your_database_password"
+    }
+}
