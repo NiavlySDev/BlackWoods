@@ -47,6 +47,24 @@ class Database {
         }
     }
 
+    // Helper pour gérer les réponses HTTP/JSON
+    async handleResponse(response) {
+        const contentType = response.headers.get('content-type');
+        const text = await response.text();
+        
+        if (!response.ok) {
+            if (contentType && contentType.includes('application/json')) {
+                const error = JSON.parse(text);
+                throw new Error(error.error || `Erreur ${response.status}`);
+            } else {
+                console.error('Erreur serveur:', text);
+                throw new Error(`Erreur serveur (${response.status})`);
+            }
+        }
+        
+        return text ? JSON.parse(text) : null;
+    }
+
     // ==================== User Management ====================
     async getUsers() {
         await this.ensureInitialized();
@@ -406,10 +424,9 @@ class Database {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status })
             });
-            if (!response.ok) throw new Error('Erreur lors de la mise à jour');
-            const order = await response.json();
-            return order;
+            return await this.handleResponse(response);
         } catch (error) {
+            console.error('Erreur updateOrderStatus:', error);
             throw error;
         }
     }

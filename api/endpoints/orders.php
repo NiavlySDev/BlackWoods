@@ -20,15 +20,15 @@ switch ($requestMethod) {
 
     case 'POST':
         // POST /api/orders - Créer une nouvelle commande
-        if (isset($pathParts[1]) && $pathParts[1] === 'status') {
+        if (isset($pathParts[1]) && isset($pathParts[2]) && $pathParts[2] === 'status') {
             // POST /api/orders/{id}/status - Mettre à jour le statut
-            if (!isset($pathParts[0])) {
+            if (!isset($pathParts[1])) {
                 http_response_code(400);
                 echo json_encode(['error' => 'ID commande requis']);
                 exit();
             }
 
-            $orderId = sanitizeInput($pathParts[0]);
+            $orderId = sanitizeInput($pathParts[1]);
             $data = json_decode(file_get_contents('php://input'), true);
             
             if (!isset($data['status'])) {
