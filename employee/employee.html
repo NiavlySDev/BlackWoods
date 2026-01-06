@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Employé - Black Woods</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="employee.css">
+</head>
+<body>
+    <div class="employee-container">
+        <div class="employee-header">
+            <div>
+                <h1 id="pageTitle">👨‍🍳 Panel Employé</h1>
+                <p style="color: var(--cream);">Black Woods</p>
+            </div>
+            <div class="employee-info">
+                <p>Bienvenue, <strong id="employeeName"></strong></p>
+                <div class="role-badges" id="roleBadges"></div>
+                <button class="btn-logout" onclick="logout()">Déconnexion</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('commandes')">📋 Commandes</button>
+            <button class="tab" onclick="switchTab('commander')">🛒 Commander</button>
+            <button class="tab" onclick="switchTab('parametres')">⚙️ Paramètres</button>
+            <button class="tab admin-only" id="adminTab" onclick="switchTab('admin')" style="display: none;">👑 Administration</button>
+        </div>
+
+        <!-- TAB COMMANDES -->
+        <div id="tab-commandes" class="tab-content active">
+            <div class="card">
+                <h2>📋 Gestion des Commandes</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="filterOrders('pending')">⏳ En attente</button>
+                    <button class="tab" onclick="filterOrders('preparing')">👨‍🍳 En préparation</button>
+                    <button class="tab" onclick="filterOrders('ready')">✅ Prêtes</button>
+                    <button class="tab" onclick="filterOrders('completed')">✔️ Terminées</button>
+                    <button class="tab" onclick="filterOrders('cancelled')">❌ Annulées</button>
+                </div>
+
+                <div class="orders-grid" id="ordersList"></div>
+            </div>
+        </div>
+
+        <!-- TAB COMMANDER (pour employés avec réduction 25%) -->
+        <div id="tab-commander" class="tab-content">
+            <div class="card">
+                <h2>🛒 Commander (Réduction employé -25%)</h2>
+                <div style="background: #28a745; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                    <strong>🎉 Réduction employé de 25% sur toutes les commandes !</strong>
+                </div>
+                <div id="employeeOrderContainer"></div>
+            </div>
+
+            <div class="card" style="margin-top: 30px;">
+                <h2>📋 Mes Commandes</h2>
+                <div id="employeeOrdersHistory"></div>
+            </div>
+        </div>
+
+        <!-- MODAL MODIFICATION COMMANDE EMPLOYÉ -->
+        <div id="editEmployeeOrderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; overflow-y: auto;">
+            <div style="max-width: 800px; margin: 50px auto; background: var(--dark-bg); border-radius: 15px; padding: 30px; border: 2px solid var(--accent-gold);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="color: var(--accent-gold); margin: 0;">✏️ Modifier ma commande</h2>
+                    <button onclick="closeEmployeeEditModal()" style="background: transparent; border: none; color: var(--text-light); font-size: 1.5rem; cursor: pointer;">✖</button>
+                </div>
+                
+                <div id="editEmployeeOrderContent"></div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button onclick="saveEmployeeOrderEdit()" style="flex: 1; padding: 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 5px; font-size: 1rem; font-weight: bold; cursor: pointer;">
+                        ✅ Enregistrer les modifications
+                    </button>
+                    <button onclick="closeEmployeeEditModal()" style="flex: 1; padding: 15px; background: #666; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;">
+                        ❌ Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB PARAMETRES -->
+        <div id="tab-parametres" class="tab-content">
+            <div class="card">
+                <h2>⚙️ Paramètres</h2>
+                <div class="settings-section">
+                    <h3>👤 Informations personnelles</h3>
+                    <form id="personalInfoForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Prénom</label>
+                                <input type="text" id="settingsFirstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nom</label>
+                                <input type="text" id="settingsLastName" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ID du jeu</label>
+                            <input type="text" id="settingsGameId" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Téléphone</label>
+                            <input type="tel" id="settingsPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Discord</label>
+                            <input type="text" id="settingsDiscord" required>
+                        </div>
+                        <button type="submit" class="btn-primary">💾 Sauvegarder</button>
+                    </form>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🔐 Changer mon code PIN</h3>
+                    <form id="changePinForm">
+                        <div class="form-group">
+                            <label>Code PIN actuel</label>
+                            <div class="pin-display-small" id="currentPinDisplay">••••••</div>
+                            <div class="pin-pad-small" id="currentPinPad"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nouveau code PIN</label>
+                            <div class="pin-display-small" id="newPinDisplay">••••••</div>
+                            <div class="pin-pad-small" id="newPinPad"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmer le nouveau PIN</label>
+                            <div class="pin-display-small" id="confirmPinDisplay">••••••</div>
+                            <div class="pin-pad-small" id="confirmPinPad"></div>
+                        </div>
+                        <button type="submit" class="btn-primary">🔒 Changer le PIN</button>
+                    </form>
+                </div>
+
+                <div class="settings-section">
+                    <h3>📊 Mes rôles</h3>
+                    <div id="myRolesDisplay"></div>
+                </div>
+
+                <div class="settings-section" style="display: none;" id="roleRequestSection">
+                    <h3>✋ Demander un nouveau rôle</h3>
+                    <p style="color: var(--cream); margin-bottom: 15px;">Sélectionnez le(s) rôle(s) que vous souhaitez obtenir :</p>
+                    <form id="roleRequestForm">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="role" value="Comptoir">
+                            Comptoir - Gestion des commandes au comptoir
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="role" value="Livraison">
+                            Livraison - Gestion des livraisons
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="role" value="Préparation">
+                            Préparation - Préparation des commandes en cuisine
+                        </label>
+                        <div class="form-group">
+                            <label>Message pour l'administrateur (optionnel)</label>
+                            <textarea id="roleRequestMessage" rows="3" placeholder="Expliquez pourquoi vous souhaitez ces rôles..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">📤 Envoyer la demande</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB ADMIN (visible uniquement pour les admins) -->
+        <div id="tab-admin" class="tab-content">
+            <div class="card">
+                <h2>👑 Administration</h2>
+                
+                <!-- Statistiques -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h3>Commandes en attente</h3>
+                        <div class="stat-value" id="adminPendingOrders">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Commandes terminées</h3>
+                        <div class="stat-value" id="adminCompletedOrders">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Articles au menu</h3>
+                        <div class="stat-value" id="adminMenuItemsCount">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Revenus du jour</h3>
+                        <div class="stat-value" id="adminTodayRevenue">0$</div>
+                    </div>
+                </div>
+
+                <!-- Demandes employé -->
+                <h3>💼 Demandes d'emploi</h3>
+                <div id="employeeRequestsList"></div>
+
+                <!-- Demandes de rôles supplémentaires -->
+                <h3 style="margin-top: 40px;">🎭 Demandes de rôles supplémentaires</h3>
+                <div id="roleRequestsList"></div>
+
+                <!-- Gestion des employés -->
+                <h3 style="margin-top: 40px;">👨‍🍳 Gestion des employés</h3>
+                <div id="usersList"></div>
+
+                <!-- Liste des clients -->
+                <h3 style="margin-top: 40px;">👥 Liste des clients</h3>
+                <div id="clientsList"></div>
+
+                <!-- Gestion du menu -->
+                <h3 style="margin-top: 40px;">🍔 Gestion du Menu</h3>
+                <div id="menuAdminList"></div>
+                
+                <h3>➕ Ajouter un nouvel article</h3>
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 15px; background: #1a1410; padding: 20px; border-radius: 8px;">
+                    <input type="text" id="newItemName" placeholder="Nom de l'article">
+                    <input type="number" id="newItemPrice" placeholder="Prix ($)">
+                    <input type="number" id="newItemCalories" placeholder="Calories">
+                    <select id="newItemCategory" style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 5px; color: var(--text-light);">
+                        <option value="plats">Plats</option>
+                        <option value="boissons">Boissons</option>
+                        <option value="gourmandises">Gourmandises</option>
+                    </select>
+                    <button class="btn-primary" onclick="addMenuItem()">➕ Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" style="position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 15px 25px; border-radius: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 10000; display: none;"></div>
+
+    <script src="../assets/js/database.js"></script>
+    
+    <script src="employee.js"></script>
+</body>
+</html>

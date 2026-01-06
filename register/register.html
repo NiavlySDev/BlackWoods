@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Black Woods</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <div class="register-header">
+                <h1>BLACK WOODS</h1>
+                <p>Créer un compte client</p>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <form class="register-form" id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">Prénom *</label>
+                        <input type="text" id="firstName" placeholder="John" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Nom *</label>
+                        <input type="text" id="lastName" placeholder="Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gameId">ID du jeu *</label>
+                    <input type="text" id="gameId" placeholder="12345" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Téléphone *</label>
+                    <input type="tel" id="phone" placeholder="37833-12345" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="discord">Discord *</label>
+                    <input type="text" id="discord" placeholder="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur *</label>
+                    <input type="text" id="username" placeholder="Choisissez un nom d'utilisateur" required>
+                </div>
+
+                <button type="submit" class="btn-register" id="submitBtn">
+                    Créer mon compte
+                </button>
+            </form>
+
+            <div id="pinDisplay" class="pin-display">
+                <h3>🔐 Votre code PIN</h3>
+                <div class="pin-code" id="pinCode"></div>
+                <p class="pin-warning">
+                    ⚠️ Notez bien ce code ! Vous en aurez besoin pour vous connecter.
+                </p>
+                <button class="btn-register" onclick="window.location.href='../login/login.html'" style="margin-top: 15px;">
+                    Se connecter
+                </button>
+            </div>
+
+            <div class="register-footer">
+                Vous avez déjà un compte ? <a href="../login/login.html">Se connecter</a>
+            </div>
+
+            <div class="back-link">
+                <a href="../home/index.html">← Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/database.js"></script>
+    
+    <script src="register.js"></script>
+</body>
+</html>

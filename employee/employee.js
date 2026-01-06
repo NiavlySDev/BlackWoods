@@ -1,805 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Employé - Black Woods</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rye&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: #0a0a0a;
-            padding: 20px;
-        }
 
-        .employee-container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .employee-header {
-            background: var(--dark-brown);
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .employee-header h1 {
-            font-family: 'Rye', cursive;
-            color: var(--accent-gold);
-            font-size: 2.5rem;
-        }
-
-        .employee-info {
-            text-align: right;
-        }
-
-        .employee-info p {
-            color: var(--cream);
-            margin-bottom: 10px;
-        }
-
-        .role-badges {
-            display: flex;
-            gap: 5px;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .role-badge {
-            padding: 4px 12px;
-            background: var(--accent-gold);
-            color: var(--dark-brown);
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .btn-logout {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Crimson Text', serif;
-            font-size: 1rem;
-        }
-
-        .card {
-            background: var(--dark-brown);
-            border-radius: 10px;
-            padding: 30px;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            margin-bottom: 30px;
-        }
-
-        .card h2 {
-            font-family: 'Rye', cursive;
-            color: var(--accent-gold);
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-
-        .card h3 {
-            color: var(--accent-gold);
-            font-size: 1.3rem;
-            margin: 20px 0 10px 0;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 12px 25px;
-            background: #2a2420;
-            border: none;
-            color: var(--text-light);
-            cursor: pointer;
-            border-radius: 5px;
-            font-family: 'Crimson Text', serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .tab.active {
-            background: var(--accent-gold);
-            color: var(--dark-brown);
-            font-weight: bold;
-        }
-
-        .tab.admin-only {
-            background: #8B0000;
-        }
-
-        .tab.admin-only.active {
-            background: #DC143C;
-        }
-
-        .tab:hover:not(.active) {
-            background: #3a3430;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .orders-grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .order-card {
-            background: #2a2420;
-            padding: 25px;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .order-id {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-        }
-
-        .order-time {
-            color: var(--cream);
-            font-size: 0.9rem;
-        }
-
-        .order-items {
-            margin: 15px 0;
-        }
-
-        .order-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 10px;
-            padding: 10px;
-            color: var(--text-light);
-            background: rgba(255,255,255,0.03);
-            border-radius: 5px;
-            margin-bottom: 5px;
-            align-items: center;
-        }
-
-        .order-item:hover {
-            background: rgba(255,255,255,0.05);
-        }
-
-        .order-item-name {
-            font-weight: 600;
-        }
-
-        .order-item-qty {
-            text-align: center;
-            color: var(--accent-gold);
-        }
-
-        .order-item-price {
-            text-align: right;
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
-
-        .order-total {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 15px;
-            margin-top: 15px;
-            border-top: 2px solid rgba(212, 175, 55, 0.3);
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-        }
-
-        .order-client {
-            color: var(--cream);
-            margin-bottom: 10px;
-        }
-
-        .order-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Crimson Text', serif;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .btn-accept {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-complete {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #dc3545;
-            color: white;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .status-pending { background: #ffc107; color: #000; }
-        .status-preparing { background: #17a2b8; color: white; }
-        .status-ready { background: #28a745; color: white; }
-        .status-completed { background: #6c757d; color: white; }
-        .status-cancelled { background: #dc3545; color: white; }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px;
-            color: var(--cream);
-        }
-
-        .empty-state-icon {
-            font-size: 5rem;
-            margin-bottom: 20px;
-        }
-
-        /* Admin Styles */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-box {
-            background: #2a2420;
-            padding: 25px;
-            border-radius: 8px;
-            text-align: center;
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        .stat-box h3 {
-            color: var(--cream);
-            font-size: 1rem;
-            margin: 0 0 10px 0;
-        }
-
-        .stat-value {
-            color: var(--accent-gold);
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        .menu-admin-item {
-            background: #2a2420;
-            padding: 20px;
-            border-radius: 8px;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr auto;
-            gap: 15px;
-            align-items: center;
-            border-left: 3px solid var(--accent-gold);
-            margin-bottom: 15px;
-        }
-
-        .menu-admin-item input,
-        .menu-admin-item select {
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 5px;
-            color: var(--text-light);
-            font-family: 'Crimson Text', serif;
-        }
-
-        .btn-update {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Crimson Text', serif;
-        }
-
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Crimson Text', serif;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            color: var(--accent-gold);
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 5px;
-            color: var(--text-light);
-            font-family: 'Crimson Text', serif;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .settings-section {
-            background: #2a2420;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .btn-primary {
-            padding: 12px 25px;
-            background: var(--accent-gold);
-            color: var(--dark-brown);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Crimson Text', serif;
-            font-weight: bold;
-        }
-
-        .user-card {
-            background: #2a2420;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .user-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--text-light);
-        }
-
-        .user-role {
-            padding: 6px 12px;
-            background: var(--accent-gold);
-            color: var(--dark-brown);
-            border-radius: 15px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .request-card {
-            background: #2a2420;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #ffc107;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-light);
-            margin-bottom: 10px;
-        }
-
-        .checkbox-label input {
-            width: auto;
-            cursor: pointer;
-        }
-
-        .pin-pad-small {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            max-width: 300px;
-            margin: 15px auto;
-        }
-
-        .pin-btn-small {
-            padding: 15px;
-            background: rgba(212, 175, 55, 0.2);
-            border: 2px solid var(--accent-gold);
-            border-radius: 5px;
-            color: var(--text-light);
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .pin-display-small {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid var(--accent-gold);
-            padding: 12px;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--text-light);
-            letter-spacing: 8px;
-            font-family: monospace;
-            margin-bottom: 10px;
-        }
-
-        .discount-badge {
-            background: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .menu-item-order {
-            background: #2a2420;
-            padding: 20px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 3px solid var(--accent-gold);
-        }
-
-        .item-info {
-            flex: 1;
-        }
-
-        .item-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--text-light);
-            margin-bottom: 8px;
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-qty {
-            width: 40px;
-            height: 40px;
-            background: rgba(212, 175, 55, 0.2);
-            border: 2px solid var(--accent-gold);
-            border-radius: 5px;
-            color: var(--text-light);
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .btn-qty:hover {
-            background: var(--accent-gold);
-            color: var(--dark-brown);
-            transform: scale(1.1);
-        }
-
-        .btn-qty:active {
-            transform: scale(0.95);
-        }
-
-        .qty-display {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .empty-cart {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--cream);
-        }
-
-        .empty-cart-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        @media (max-width: 1024px) {
-            .menu-admin-item {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="employee-container">
-        <div class="employee-header">
-            <div>
-                <h1 id="pageTitle">👨‍🍳 Panel Employé</h1>
-                <p style="color: var(--cream);">Black Woods</p>
-            </div>
-            <div class="employee-info">
-                <p>Bienvenue, <strong id="employeeName"></strong></p>
-                <div class="role-badges" id="roleBadges"></div>
-                <button class="btn-logout" onclick="logout()">Déconnexion</button>
-            </div>
-        </div>
-
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('commandes')">📋 Commandes</button>
-            <button class="tab" onclick="switchTab('commander')">🛒 Commander</button>
-            <button class="tab" onclick="switchTab('parametres')">⚙️ Paramètres</button>
-            <button class="tab admin-only" id="adminTab" onclick="switchTab('admin')" style="display: none;">👑 Administration</button>
-        </div>
-
-        <!-- TAB COMMANDES -->
-        <div id="tab-commandes" class="tab-content active">
-            <div class="card">
-                <h2>📋 Gestion des Commandes</h2>
-                
-                <div class="tabs">
-                    <button class="tab active" onclick="filterOrders('pending')">⏳ En attente</button>
-                    <button class="tab" onclick="filterOrders('preparing')">👨‍🍳 En préparation</button>
-                    <button class="tab" onclick="filterOrders('ready')">✅ Prêtes</button>
-                    <button class="tab" onclick="filterOrders('completed')">✔️ Terminées</button>
-                    <button class="tab" onclick="filterOrders('cancelled')">❌ Annulées</button>
-                </div>
-
-                <div class="orders-grid" id="ordersList"></div>
-            </div>
-        </div>
-
-        <!-- TAB COMMANDER (pour employés avec réduction 25%) -->
-        <div id="tab-commander" class="tab-content">
-            <div class="card">
-                <h2>🛒 Commander (Réduction employé -25%)</h2>
-                <div style="background: #28a745; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                    <strong>🎉 Réduction employé de 25% sur toutes les commandes !</strong>
-                </div>
-                <div id="employeeOrderContainer"></div>
-            </div>
-
-            <div class="card" style="margin-top: 30px;">
-                <h2>📋 Mes Commandes</h2>
-                <div id="employeeOrdersHistory"></div>
-            </div>
-        </div>
-
-        <!-- MODAL MODIFICATION COMMANDE EMPLOYÉ -->
-        <div id="editEmployeeOrderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; overflow-y: auto;">
-            <div style="max-width: 800px; margin: 50px auto; background: var(--dark-bg); border-radius: 15px; padding: 30px; border: 2px solid var(--accent-gold);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="color: var(--accent-gold); margin: 0;">✏️ Modifier ma commande</h2>
-                    <button onclick="closeEmployeeEditModal()" style="background: transparent; border: none; color: var(--text-light); font-size: 1.5rem; cursor: pointer;">✖</button>
-                </div>
-                
-                <div id="editEmployeeOrderContent"></div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button onclick="saveEmployeeOrderEdit()" style="flex: 1; padding: 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 5px; font-size: 1rem; font-weight: bold; cursor: pointer;">
-                        ✅ Enregistrer les modifications
-                    </button>
-                    <button onclick="closeEmployeeEditModal()" style="flex: 1; padding: 15px; background: #666; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;">
-                        ❌ Annuler
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB PARAMETRES -->
-        <div id="tab-parametres" class="tab-content">
-            <div class="card">
-                <h2>⚙️ Paramètres</h2>
-                <div class="settings-section">
-                    <h3>👤 Informations personnelles</h3>
-                    <form id="personalInfoForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Prénom</label>
-                                <input type="text" id="settingsFirstName" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Nom</label>
-                                <input type="text" id="settingsLastName" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>ID du jeu</label>
-                            <input type="text" id="settingsGameId" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Téléphone</label>
-                            <input type="tel" id="settingsPhone" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Discord</label>
-                            <input type="text" id="settingsDiscord" required>
-                        </div>
-                        <button type="submit" class="btn-primary">💾 Sauvegarder</button>
-                    </form>
-                </div>
-
-                <div class="settings-section">
-                    <h3>🔐 Changer mon code PIN</h3>
-                    <form id="changePinForm">
-                        <div class="form-group">
-                            <label>Code PIN actuel</label>
-                            <div class="pin-display-small" id="currentPinDisplay">••••••</div>
-                            <div class="pin-pad-small" id="currentPinPad"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>Nouveau code PIN</label>
-                            <div class="pin-display-small" id="newPinDisplay">••••••</div>
-                            <div class="pin-pad-small" id="newPinPad"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>Confirmer le nouveau PIN</label>
-                            <div class="pin-display-small" id="confirmPinDisplay">••••••</div>
-                            <div class="pin-pad-small" id="confirmPinPad"></div>
-                        </div>
-                        <button type="submit" class="btn-primary">🔒 Changer le PIN</button>
-                    </form>
-                </div>
-
-                <div class="settings-section">
-                    <h3>📊 Mes rôles</h3>
-                    <div id="myRolesDisplay"></div>
-                </div>
-
-                <div class="settings-section" style="display: none;" id="roleRequestSection">
-                    <h3>✋ Demander un nouveau rôle</h3>
-                    <p style="color: var(--cream); margin-bottom: 15px;">Sélectionnez le(s) rôle(s) que vous souhaitez obtenir :</p>
-                    <form id="roleRequestForm">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="role" value="Comptoir">
-                            Comptoir - Gestion des commandes au comptoir
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="role" value="Livraison">
-                            Livraison - Gestion des livraisons
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="role" value="Préparation">
-                            Préparation - Préparation des commandes en cuisine
-                        </label>
-                        <div class="form-group">
-                            <label>Message pour l'administrateur (optionnel)</label>
-                            <textarea id="roleRequestMessage" rows="3" placeholder="Expliquez pourquoi vous souhaitez ces rôles..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary">📤 Envoyer la demande</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB ADMIN (visible uniquement pour les admins) -->
-        <div id="tab-admin" class="tab-content">
-            <div class="card">
-                <h2>👑 Administration</h2>
-                
-                <!-- Statistiques -->
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <h3>Commandes en attente</h3>
-                        <div class="stat-value" id="adminPendingOrders">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Commandes terminées</h3>
-                        <div class="stat-value" id="adminCompletedOrders">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Articles au menu</h3>
-                        <div class="stat-value" id="adminMenuItemsCount">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Revenus du jour</h3>
-                        <div class="stat-value" id="adminTodayRevenue">0$</div>
-                    </div>
-                </div>
-
-                <!-- Demandes employé -->
-                <h3>💼 Demandes d'emploi</h3>
-                <div id="employeeRequestsList"></div>
-
-                <!-- Demandes de rôles supplémentaires -->
-                <h3 style="margin-top: 40px;">🎭 Demandes de rôles supplémentaires</h3>
-                <div id="roleRequestsList"></div>
-
-                <!-- Gestion des employés -->
-                <h3 style="margin-top: 40px;">👨‍🍳 Gestion des employés</h3>
-                <div id="usersList"></div>
-
-                <!-- Liste des clients -->
-                <h3 style="margin-top: 40px;">👥 Liste des clients</h3>
-                <div id="clientsList"></div>
-
-                <!-- Gestion du menu -->
-                <h3 style="margin-top: 40px;">🍔 Gestion du Menu</h3>
-                <div id="menuAdminList"></div>
-                
-                <h3>➕ Ajouter un nouvel article</h3>
-                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 15px; background: #1a1410; padding: 20px; border-radius: 8px;">
-                    <input type="text" id="newItemName" placeholder="Nom de l'article">
-                    <input type="number" id="newItemPrice" placeholder="Prix ($)">
-                    <input type="number" id="newItemCalories" placeholder="Calories">
-                    <select id="newItemCategory" style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 5px; color: var(--text-light);">
-                        <option value="plats">Plats</option>
-                        <option value="boissons">Boissons</option>
-                        <option value="gourmandises">Gourmandises</option>
-                    </select>
-                    <button class="btn-primary" onclick="addMenuItem()">➕ Ajouter</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="notification" style="position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 15px 25px; border-radius: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 10000; display: none;"></div>
-
-    <script src="database.js"></script>
-    <script>
         // Vérification de l'authentification
         const currentUser = db.getCurrentUser();
         if (!currentUser || (currentUser.role !== 'employee' && currentUser.role !== 'admin')) {
-            window.location.href = 'login.html';
+            window.location.href = '../login/login.html';
         }
 
         const isAdmin = currentUser.role === 'admin';
@@ -940,6 +143,7 @@
         }
 
         function getOrderActions(order) {
+            // Les admins ont accès à tout
             const userRoles = currentUser.roles || [];
             const canPrepare = isAdmin || userRoles.includes('Préparation');
             const canDeliver = isAdmin || userRoles.includes('Livraison');
@@ -948,7 +152,7 @@
             const isAssignedToMe = order.assignedTo && order.assignedTo.id === currentUser.id;
             const isAssignedToOther = order.assignedTo && order.assignedTo.id !== currentUser.id;
 
-            // Si la commande est assignée à quelqu'un d'autre, désactiver les actions
+            // Si la commande est assignée à quelqu'un d'autre, désactiver les actions (sauf pour admin)
             if (isAssignedToOther && !isAdmin) {
                 return `<div style="color: var(--light-brown); font-style: italic;">🔒 Commande prise en charge par ${order.assignedTo.name}</div>`;
             }
@@ -1160,7 +364,6 @@
                 await loadEmployeeOrderHistory();
             } catch (error) {
                 showNotification('❌ Erreur lors de la commande', true);
-                console.error(error);
             }
         }
 
@@ -1261,7 +464,6 @@
                 showNotification('✅ Commande annulée avec succès');
             } catch (error) {
                 showNotification('❌ Erreur lors de l\'annulation', true);
-                console.error(error);
             }
         }
 
@@ -1376,10 +578,11 @@
             
             container.innerHTML = menuItems.map(item => {
                 const discountedPrice = Math.floor(item.price * 0.75);
+                const safeName = item.name.replace(/'/g, "\\'");
                 return `
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 5px; margin-bottom: 8px;">
                         <span style="color: var(--text-light);">${item.name} - ${discountedPrice}$ <span style="font-size: 0.8rem; color: #28a745;">(-25%)</span></span>
-                        <button onclick="addItemToEmployeeEditOrder(${item.id}, '${item.name.replace(/'/g, "\\'"))}', ${discountedPrice})" style="padding: 5px 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
+                        <button onclick="addItemToEmployeeEditOrder(${item.id}, '${safeName}', ${discountedPrice})" style="padding: 5px 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
                             + Ajouter
                         </button>
                     </div>
@@ -1502,7 +705,6 @@
                 showNotification('✅ Commande modifiée avec succès !');
             } catch (error) {
                 showNotification('❌ ' + error.message, true);
-                console.error(error);
             }
         }
 
@@ -1665,7 +867,6 @@
                 loadSettings(); // Recharger pour mettre à jour l'affichage
             } catch (error) {
                 showNotification('❌ Erreur lors de l\'envoi de la demande', true);
-                console.error(error);
             }
         });
 
@@ -1815,6 +1016,11 @@
             
             const container = document.getElementById('usersList');
             
+            if (employees.length === 0) {
+                container.innerHTML = '<p style="color: var(--cream); text-align: center; padding: 20px;">Aucun employé enregistré</p>';
+                return;
+            }
+            
             container.innerHTML = employees.map(user => `
                 <div class="user-card">
                     <div class="user-header">
@@ -1823,11 +1029,14 @@
                                 ${user.personalInfo ? `${user.personalInfo.firstName} ${user.personalInfo.lastName}` : user.username}
                             </div>
                             <div style="color: var(--cream); font-size: 0.9rem;">
-                                ${user.personalInfo ? `ID: ${user.personalInfo.gameId} | ${user.personalInfo.discord}` : ''}
+                                @${user.username}${user.personalInfo ? ` | ID: ${user.personalInfo.gameId} | ${user.personalInfo.discord}` : ''}
                             </div>
                         </div>
-                        <div class="user-role">${user.role === 'admin' ? 'ADMIN' : 'EMPLOYÉ'}</div>
+                        <div class="user-role" style="background: ${user.role === 'admin' ? '#DC143C' : 'var(--accent-gold)'}; color: ${user.role === 'admin' ? 'white' : 'var(--dark-brown)'}; padding: 5px 15px; border-radius: 15px; font-weight: bold;">
+                            ${user.role === 'admin' ? '👑 ADMIN' : '👨‍🍳 EMPLOYÉ'}
+                        </div>
                     </div>
+                    
                     ${user.role === 'employee' ? `
                         <div style="margin-top: 15px;">
                             <strong style="color: var(--accent-gold);">Rôles:</strong>
@@ -1850,6 +1059,27 @@
                             </div>
                         </div>
                     ` : ''}
+                    
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        ${user.role === 'employee' ? `
+                            <button class="btn-action btn-accept" style="flex: 1; background: #DC143C;" onclick="promoteToAdmin(${user.id})">
+                                👑 Promouvoir Admin
+                            </button>
+                        ` : user.id !== currentUser.id ? `
+                            <button class="btn-action btn-cancel" style="flex: 1;" onclick="demoteFromAdmin(${user.id})">
+                                ⬇️ Rétrograder Employé
+                            </button>
+                        ` : `
+                            <div style="flex: 1; text-align: center; color: var(--cream); font-style: italic; padding: 10px;">
+                                (C'est vous)
+                            </div>
+                        `}
+                        ${user.id !== currentUser.id ? `
+                            <button class="btn-action btn-cancel" style="flex: 1;" onclick="deleteUser(${user.id})">
+                                🗑️ Supprimer
+                            </button>
+                        ` : ''}
+                    </div>
                 </div>
             `).join('');
         }
@@ -1917,6 +1147,23 @@
             }
         }
 
+        async function promoteToAdmin(userId) {
+            if (confirm('⚠️ Promouvoir cet employé en administrateur ? Il aura accès à toutes les fonctionnalités d\'administration.')) {
+                await db.updateUserRole(userId, 'admin');
+                showNotification('👑 Employé promu administrateur !');
+                loadUsersList();
+            }
+        }
+
+        async function demoteFromAdmin(userId) {
+            if (confirm('⚠️ Rétrograder cet administrateur en employé ? Il perdra tous les privilèges d\'administration.')) {
+                await db.updateUserRole(userId, 'employee');
+                await db.updateUserRoles(userId, ['Comptoir']); // Donner au moins un rôle par défaut
+                showNotification('✅ Administrateur rétrogradé en employé');
+                loadUsersList();
+            }
+        }
+
         async function deleteUser(userId) {
             if (confirm('⚠️ Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) {
                 const users = await db.getUsers();
@@ -1924,6 +1171,7 @@
                 localStorage.setItem('blackwoods_users', JSON.stringify(filteredUsers));
                 showNotification('✅ Utilisateur supprimé');
                 loadClientsList();
+                loadUsersList();
             }
         }
 
@@ -2055,8 +1303,6 @@
 
         function logout() {
             db.logout();
-            window.location.href = 'login.html';
+            window.location.href = '../login/login.html';
         }
-    </script>
-</body>
-</html>
+    

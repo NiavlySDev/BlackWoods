@@ -87,17 +87,52 @@
 
 ## 📝 Résumé des fichiers créés/modifiés
 
-### Fichiers principaux
-- ✅ **database.js** - Système complet avec PIN, multi-rôles, demandes employé
+### Structure du projet (Mise à jour: 6 janvier 2026)
+
+#### 📂 Nouvelle organisation modulaire
+
+**home/** - Page d'accueil
 - ✅ **index.html** - Page d'accueil avec liens vers connexion et pages légales
-- ✅ **login.html** - Connexion avec pad numérique 6 chiffres
-- ✅ **register.html** - Inscription client avec génération automatique de PIN
+
+**client/** - Espace client
 - ✅ **client.html** - Panel client complet (Commander/Historique/Paramètres)
+- ✅ **client.css** - Styles spécifiques au panel client
+- ✅ **client.js** - Logique du panel client (commandes, panier, paramètres)
+
+**employee/** - Espace employé/admin
 - ✅ **employee.html** - Panel employé unifié avec section admin (Commandes/Commander/Paramètres/Administration)
-- ✅ **styles.css** - Thème dark complet style western
-- ✅ **script.js** - Scripts de navigation et animations
-- ✅ **mentions-legales.html** - Page des mentions légales
-- ✅ **reglements.html** - Page des règlements
+- ✅ **employee.css** - Styles spécifiques au panel employé
+- ✅ **employee.js** - Logique du panel employé (gestion commandes, administration)
+
+**login/** - Connexion
+- ✅ **login.html** - Connexion avec pad numérique 6 chiffres
+- ✅ **login.css** - Styles de la page de connexion
+- ✅ **login.js** - Logique d'authentification
+
+**register/** - Inscription
+- ✅ **register.html** - Inscription client avec génération automatique de PIN
+- ✅ **register.css** - Styles de la page d'inscription
+- ✅ **register.js** - Logique d'inscription
+
+**pages/** - Pages légales
+- ✅ **mentions-legales.html** - Mentions légales
+- ✅ **reglements.html** - Règlements
+- ✅ **pages.css** - Styles des pages légales
+
+**assets/** - Fichiers partagés
+- 📁 **css/**
+  - ✅ **styles.css** - Thème dark complet style western (styles globaux)
+- 📁 **js/**
+  - ✅ **database.js** - Système complet avec PIN, multi-rôles, demandes employé
+  - ✅ **script.js** - Scripts de navigation et animations
+- ✅ **config.json** - Configuration de l'application
+
+### 🎯 Avantages de la nouvelle structure
+- ✅ Séparation claire HTML/CSS/JS pour chaque module
+- ✅ Meilleure organisation et maintenabilité
+- ✅ Fichiers communs centralisés dans assets/
+- ✅ Structure modulaire facilitant l'ajout de nouvelles fonctionnalités
+- ✅ Chemins relatifs cohérents et faciles à suivre
 
 ### Fonctionnalités clés implémentées
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Black Woods</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>BLACK WOODS</h1>
+                <p>Espace Personnel</p>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pin">Code PIN</label>
+                    <div class="pin-display" id="pinDisplay">
+                        <div class="pin-dot" id="dot1"></div>
+                        <div class="pin-dot" id="dot2"></div>
+                        <div class="pin-dot" id="dot3"></div>
+                        <div class="pin-dot" id="dot4"></div>
+                        <div class="pin-dot" id="dot5"></div>
+                        <div class="pin-dot" id="dot6"></div>
+                    </div>
+                </div>
+
+                <div class="pin-pad">
+                    <button type="button" class="pin-btn" onclick="addDigit('1')">1</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('2')">2</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('3')">3</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('4')">4</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('5')">5</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('6')">6</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('7')">7</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('8')">8</button>
+                    <button type="button" class="pin-btn" onclick="addDigit('9')">9</button>
+                    <button type="button" class="pin-btn pin-btn-clear" onclick="clearPin()">✕</button>
+                    <button type="button" class="pin-btn pin-btn-zero" onclick="addDigit('0')">0</button>
+                    <button type="button" class="pin-btn pin-btn-clear" onclick="deleteDigit()">⌫</button>
+                </div>
+
+                <button type="submit" class="btn-login">Se Connecter</button>
+            </form>
+
+            <div class="login-footer">
+                <div>Pas encore de compte ? <a href="../register/register.html">S'inscrire</a></div>
+                <div class="back-link"><a href="../home/index.html">← Retour à l'accueil</a></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/database.js"></script>
+    
+    <script src="login.js"></script>
+</body>
+</html>

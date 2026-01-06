@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Client - Black Woods</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="client.css">
+</head>
+<body>
+    <div class="client-container">
+        <div class="client-header">
+            <div>
+                <h1>🍽️ Espace Client</h1>
+                <p style="color: var(--cream);">Black Woods</p>
+            </div>
+            <div class="client-info">
+                <p>Bienvenue, <strong id="clientName"></strong></p>
+                <button class="btn-logout" onclick="logout()">Déconnexion</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('commander')">🛒 Commander</button>
+            <button class="tab" onclick="switchTab('historique')">📋 Mes Commandes</button>
+            <button class="tab" onclick="switchTab('parametres')">⚙️ Paramètres</button>
+        </div>
+
+        <!-- TAB COMMANDER -->
+        <div id="tab-commander" class="tab-content active">
+            <div class="main-content">
+                <!-- Menu -->
+                <div class="card">
+                    <h2>📋 Notre Menu</h2>
+                    <div id="menuContainer"></div>
+                </div>
+
+                <!-- Panier -->
+                <div class="card cart-card">
+                    <h2>🛒 Votre Panier</h2>
+                    <div id="cartContent">
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">🛒</div>
+                            <p>Votre panier est vide</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB HISTORIQUE -->
+        <div id="tab-historique" class="tab-content">
+            <div class="card">
+                <h2>📋 Historique de mes commandes</h2>
+                <div id="ordersHistory"></div>
+            </div>
+        </div>
+
+        <!-- MODAL MODIFICATION COMMANDE -->
+        <div id="editOrderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; overflow-y: auto;">
+            <div style="max-width: 800px; margin: 50px auto; background: var(--dark-bg); border-radius: 15px; padding: 30px; border: 2px solid var(--accent-gold);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="color: var(--accent-gold); margin: 0;">✏️ Modifier la commande</h2>
+                    <button onclick="closeEditModal()" style="background: transparent; border: none; color: var(--text-light); font-size: 1.5rem; cursor: pointer;">✖</button>
+                </div>
+                
+                <div id="editOrderContent"></div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button onclick="saveOrderEdit()" style="flex: 1; padding: 15px; background: var(--accent-gold); color: var(--dark-brown); border: none; border-radius: 5px; font-size: 1rem; font-weight: bold; cursor: pointer;">
+                        ✅ Enregistrer les modifications
+                    </button>
+                    <button onclick="closeEditModal()" style="flex: 1; padding: 15px; background: #666; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;">
+                        ❌ Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB PARAMETRES -->
+        <div id="tab-parametres" class="tab-content">
+            <div class="card">
+                <h2>⚙️ Paramètres</h2>
+                <div class="settings-grid">
+                    <!-- Informations personnelles -->
+                    <div class="settings-section">
+                        <h3>👤 Informations personnelles</h3>
+                        <form id="personalInfoForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Prénom</label>
+                                    <input type="text" id="settingsFirstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nom</label>
+                                    <input type="text" id="settingsLastName" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ID du jeu</label>
+                                <input type="text" id="settingsGameId" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Téléphone</label>
+                                <input type="tel" id="settingsPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Discord</label>
+                                <input type="text" id="settingsDiscord" required>
+                            </div>
+                            <button type="submit" class="btn-primary">💾 Sauvegarder</button>
+                        </form>
+                    </div>
+
+                    <!-- Changer le PIN -->
+                    <div class="settings-section">
+                        <h3>🔐 Changer mon code PIN</h3>
+                        <form id="changePinForm">
+                            <div class="form-group">
+                                <label>Code PIN actuel</label>
+                                <div class="pin-display-small" id="currentPinDisplay">••••••</div>
+                                <div class="pin-pad-small" id="currentPinPad"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Nouveau code PIN</label>
+                                <div class="pin-display-small" id="newPinDisplay">••••••</div>
+                                <div class="pin-pad-small" id="newPinPad"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirmer le nouveau PIN</label>
+                                <div class="pin-display-small" id="confirmPinDisplay">••••••</div>
+                                <div class="pin-pad-small" id="confirmPinPad"></div>
+                            </div>
+                            <button type="submit" class="btn-primary">🔒 Changer le PIN</button>
+                        </form>
+                    </div>
+
+                    <!-- Demande pour devenir employé -->
+                    <div class="settings-section">
+                        <h3>💼 Devenir employé</h3>
+                        <div class="info-box">
+                            Vous avez été recruté ? Faites une demande pour accéder à l'espace employé.
+                        </div>
+                        <form id="employeeRequestForm">
+                            <div class="form-group">
+                                <label>Message pour l'administration</label>
+                                <textarea id="employeeRequestMessage" rows="4" placeholder="Expliquez pourquoi vous souhaitez devenir employé..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">📤 Envoyer la demande</button>
+                        </form>
+                        <div id="requestStatus" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="../assets/js/database.js"></script>
+    
+    <script src="client.js"></script>
+</body>
+</html>

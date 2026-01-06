@@ -23,7 +23,6 @@ class Database {
         }
         
         this.initialized = true;
-        console.log('Database initialisée avec succès');
     }
     
     async ensureInitialized() {
@@ -34,11 +33,9 @@ class Database {
 
     async loadConfig() {
         try {
-            const response = await fetch('config.json');
+            const response = await fetch('../assets/config.json');
             this.config = await response.json();
-            console.log('Configuration chargée avec succès');
         } catch (error) {
-            console.error('Erreur chargement config.json:', error);
             this.config = { discordWebhook: null, mentionRoleId: null };
         }
     }
@@ -51,7 +48,6 @@ class Database {
             });
             this.isRemoteAvailable = response.ok;
         } catch (error) {
-            console.warn('BDD distante non disponible, utilisation du stockage local');
             this.isRemoteAvailable = false;
         }
     }
@@ -66,7 +62,6 @@ class Database {
             const users = JSON.parse(existingUsers);
             // Vérifier si les utilisateurs ont des PINs
             if (users.some(u => !u.pin)) {
-                console.warn('⚠️ Anciennes données détectées sans PIN - Réinitialisation automatique');
                 needsReset = true;
             }
         }
@@ -153,7 +148,6 @@ class Database {
                 const response = await fetch(`${this.remoteURL}/users`);
                 return await response.json();
             } catch (error) {
-                console.error('Erreur récupération users distants:', error);
                 return this.getLocalUsers();
             }
         }
@@ -168,12 +162,6 @@ class Database {
     async authenticate(username, pin) {
         await this.ensureInitialized();
         const users = await this.getUsers();
-        console.log('Tentative de connexion:', username, 'PIN:', pin, 'Type PIN:', typeof pin);
-        console.log('Utilisateurs disponibles:', users.map(u => ({ 
-            username: u.username, 
-            pin: u.pin, 
-            typePIN: typeof u.pin 
-        })));
         
         // Convertir le PIN en string pour la comparaison
         const pinStr = String(pin);
@@ -189,10 +177,8 @@ class Database {
                 loginTime: new Date().toISOString()
             };
             localStorage.setItem('blackwoods_session', JSON.stringify(userSession));
-            console.log('Connexion réussie:', userSession);
             return userSession;
         }
-        console.log('Échec de connexion - utilisateur non trouvé');
         return null;
     }
 
@@ -230,7 +216,6 @@ class Database {
                     body: JSON.stringify(newUser)
                 });
             } catch (error) {
-                console.error('Erreur création user distant:', error);
             }
         }
         
@@ -282,7 +267,6 @@ class Database {
                 const response = await fetch(`${this.remoteURL}/menu`);
                 return await response.json();
             } catch (error) {
-                console.error('Erreur récupération menu distant:', error);
                 return this.getLocalMenu();
             }
         }
@@ -304,7 +288,6 @@ class Database {
                 });
                 return await response.json();
             } catch (error) {
-                console.error('Erreur mise à jour menu distant:', error);
                 return this.updateLocalMenuItem(id, updates);
             }
         }
@@ -332,7 +315,6 @@ class Database {
                 });
                 return await response.json();
             } catch (error) {
-                console.error('Erreur ajout menu distant:', error);
                 return this.addLocalMenuItem(item);
             }
         }
@@ -357,7 +339,6 @@ class Database {
                 const response = await fetch(`${this.remoteURL}/employee-requests`);
                 return await response.json();
             } catch (error) {
-                console.error('Erreur récupération demandes distantes:', error);
                 return this.getLocalEmployeeRequests();
             }
         }
@@ -394,7 +375,6 @@ class Database {
                     body: JSON.stringify(newRequest)
                 });
             } catch (error) {
-                console.error('Erreur création demande distante:', error);
             }
         }
 
@@ -481,7 +461,6 @@ class Database {
                 await fetch(`${this.remoteURL}/menu/${id}`, { method: 'DELETE' });
                 return true;
             } catch (error) {
-                console.error('Erreur suppression menu distant:', error);
                 return this.deleteLocalMenuItem(id);
             }
         }
@@ -502,7 +481,6 @@ class Database {
                 const response = await fetch(`${this.remoteURL}/orders`);
                 return await response.json();
             } catch (error) {
-                console.error('Erreur récupération commandes distantes:', error);
                 return this.getLocalOrders();
             }
         }
@@ -524,7 +502,6 @@ class Database {
                 });
                 return await response.json();
             } catch (error) {
-                console.error('Erreur création commande distante:', error);
                 return this.createLocalOrder(order);
             }
         }
@@ -559,7 +536,6 @@ class Database {
                 });
                 return await response.json();
             } catch (error) {
-                console.error('Erreur mise à jour statut distant:', error);
                 return this.updateLocalOrderStatus(orderId, status);
             }
         }
@@ -652,7 +628,6 @@ class Database {
     // ==================== Discord Webhook ====================
     async sendDiscordWebhook(order, action) {
         if (!this.config || !this.config.discordWebhook) {
-            console.warn('Webhook Discord non configuré');
             return;
         }
 
@@ -723,10 +698,7 @@ class Database {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            
-            console.log('✅ Notification Discord envoyée');
         } catch (error) {
-            console.error('❌ Erreur envoi webhook Discord:', error);
         }
     }
     

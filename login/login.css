@@ -1,0 +1,230 @@
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%238B4513" width="1200" height="800"/><path fill="%23654321" d="M0,400 Q300,350 600,400 T1200,400 V800 H0 Z"/></svg>');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .login-box {
+            background: rgba(26, 20, 16, 0.95);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            max-width: 450px;
+            width: 100%;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            font-family: 'Rye', cursive;
+            color: var(--accent-gold);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--cream);
+            font-size: 1.1rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 5px;
+            color: var(--text-light);
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .pin-display {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid var(--accent-gold);
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            min-height: 70px;
+        }
+
+        .pin-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .pin-dot.filled {
+            background: var(--accent-gold);
+            box-shadow: 0 0 10px var(--accent-gold);
+            transform: scale(1.1);
+        }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pin-btn {
+            padding: 20px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 2px solid var(--accent-gold);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .pin-btn:hover {
+            background: var(--accent-gold);
+            color: var(--dark-brown);
+            transform: scale(1.05);
+        }
+
+        .pin-btn:active {
+            transform: scale(0.95);
+        }
+
+        .pin-btn-zero {
+            grid-column: 2;
+        }
+
+        .pin-btn-clear {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            font-size: 1.2rem;
+        }
+
+        .pin-btn-clear:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-login {
+            padding: 15px;
+            background: var(--accent-gold);
+            color: var(--dark-brown);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Crimson Text', serif;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover:not(:disabled) {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .login-footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .login-footer a:hover {
+            color: var(--cream);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: var(--cream);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: var(--accent-gold);
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #ff6b6b;
+            padding: 12px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .info-box {
+            background: rgba(23, 162, 184, 0.2);
+            border: 1px solid #17a2b8;
+            color: #5ddef4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .info-box strong {
+            color: var(--accent-gold);
+        }
+    
