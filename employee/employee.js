@@ -1382,6 +1382,17 @@
             return statusTexts[status] || status;
         }
 
+        function getStatusColor(status) {
+            const colors = {
+                'pending': '#ffc107',
+                'preparing': '#17a2b8',
+                'ready': '#28a745',
+                'completed': '#6c757d',
+                'cancelled': '#dc3545'
+            };
+            return colors[status] || '#6c757d';
+        }
+
         function formatDate(dateString) {
             const date = new Date(dateString);
             const now = new Date();
