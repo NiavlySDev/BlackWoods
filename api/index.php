@@ -2,8 +2,6 @@
 // ==================== API Router ====================
 // Route toutes les requêtes vers les bons endpoints
 
-require_once 'config.php';
-
 // Récupérer l'URL de la requête
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -14,31 +12,34 @@ $path = str_replace($basePath, '', parse_url($requestUri, PHP_URL_PATH));
 $path = trim($path, '/');
 $pathParts = explode('/', $path);
 
+// Headers CORS
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Content-Type: application/json; charset=utf-8');
+
+// Gérer les requêtes OPTIONS (CORS preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 // Router
 try {
     switch ($pathParts[0]) {
         case 'health':
+            // Health check ne nécessite pas de connexion DB
             echo json_encode(['status' => 'ok', 'timestamp' => time()]);
             break;
 
         case 'users':
-            require_once 'endpoints/users.php';
-            break;
-
         case 'menu':
-            require_once 'endpoints/menu.php';
-            break;
-
         case 'orders':
-            require_once 'endpoints/orders.php';
-            break;
-
         case 'employee-requests':
-            require_once 'endpoints/employee-requests.php';
-            break;
-
         case 'role-requests':
-            require_once 'endpoints/role-requests.php';
+            // Ces endpoints nécessitent la config et la connexion DB
+            require_once 'config.php';
+            require_once 'endpoints/' . $pathParts[0] . '.php';
             break;
 
         default:

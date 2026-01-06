@@ -2,19 +2,18 @@
 // ==================== Configuration API Backend ====================
 // Connexion à la base de données MySQL
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Content-Type: application/json; charset=utf-8');
+// Charger la configuration depuis config.db.json (protégé)
+$configFile = __DIR__ . '/config.db.json';
 
-// Gérer les requêtes OPTIONS (CORS preflight)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
+if (!file_exists($configFile)) {
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Fichier de configuration manquant',
+        'details' => 'Créez le fichier api/config.db.json avec vos identifiants MySQL'
+    ]);
     exit();
 }
 
-// Charger la configuration depuis config.db.json (protégé)
-$configFile = __DIR__ . '/config.db.json';
 $config = json_decode(file_get_contents($configFile), true);
 
 if (!$config || !isset($config['database'])) {
