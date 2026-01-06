@@ -1,9 +1,9 @@
 // ==================== Database Management System ====================
-// Gère la connexion à la BDD distante avec fallback sur localStorage
+// Gère la connexion à la BDD MySQL distante avec fallback sur localStorage
 
 class Database {
     constructor() {
-        this.remoteURL = 'https://votre-api.com/api'; // À remplacer par votre URL d'API
+        this.apiURL = null; // Sera défini après le chargement de la config
         this.isRemoteAvailable = false;
         this.initialized = false;
         this.config = null;
@@ -35,14 +35,30 @@ class Database {
         try {
             const response = await fetch('../assets/config.json');
             this.config = await response.json();
+            
+            // Définir l'URL de l'API selon l'environnement
+            if (this.config.database && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                // En production, utiliser l'API backend qui se connectera à MySQL
+                this.apiURL = window.location.origin + '/api';
+            } else {
+                // En local, pas d'API distante
+                this.apiURL = null;
+            }
         } catch (error) {
-            this.config = { discordWebhook: null, mentionRoleId: null };
+            this.config = { discordWebhook: null, mentionRoleId: null, database: null };
+            this.apiURL = null;
         }
     }
 
     async checkRemoteConnection() {
+        // Ne vérifier la connexion que si une API est configurée
+        if (!this.apiURL) {
+            this.isRemoteAvailable = false;
+            return;
+        }
+        
         try {
-            const response = await fetch(`${this.remoteURL}/health`, {
+            const response = await fetch(`${this.apiURL}/health`, {
                 method: 'GET',
                 timeout: 5000
             });
@@ -145,7 +161,7 @@ class Database {
     async getUsers() {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/users`);
+                const response = await fetch(`${this.apiURL}/users`);
                 return await response.json();
             } catch (error) {
                 return this.getLocalUsers();
@@ -210,7 +226,7 @@ class Database {
         
         if (this.isRemoteAvailable) {
             try {
-                await fetch(`${this.remoteURL}/users`, {
+                await fetch(`${this.apiURL}/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newUser)
@@ -264,7 +280,7 @@ class Database {
     async getMenu() {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/menu`);
+                const response = await fetch(`${this.apiURL}/menu`);
                 return await response.json();
             } catch (error) {
                 return this.getLocalMenu();
@@ -281,7 +297,7 @@ class Database {
     async updateMenuItem(id, updates) {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/menu/${id}`, {
+                const response = await fetch(`${this.apiURL}/menu/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updates)
@@ -308,7 +324,7 @@ class Database {
     async addMenuItem(item) {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/menu`, {
+                const response = await fetch(`${this.apiURL}/menu`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(item)
@@ -336,7 +352,7 @@ class Database {
     async getEmployeeRequests() {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/employee-requests`);
+                const response = await fetch(`${this.apiURL}/employee-requests`);
                 return await response.json();
             } catch (error) {
                 return this.getLocalEmployeeRequests();
@@ -369,7 +385,7 @@ class Database {
         
         if (this.isRemoteAvailable) {
             try {
-                await fetch(`${this.remoteURL}/employee-requests`, {
+                await fetch(`${this.apiURL}/employee-requests`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newRequest)
@@ -458,7 +474,7 @@ class Database {
     async deleteMenuItem(id) {
         if (this.isRemoteAvailable) {
             try {
-                await fetch(`${this.remoteURL}/menu/${id}`, { method: 'DELETE' });
+                await fetch(`${this.apiURL}/menu/${id}`, { method: 'DELETE' });
                 return true;
             } catch (error) {
                 return this.deleteLocalMenuItem(id);
@@ -478,7 +494,7 @@ class Database {
     async getOrders() {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/orders`);
+                const response = await fetch(`${this.apiURL}/orders`);
                 return await response.json();
             } catch (error) {
                 return this.getLocalOrders();
@@ -495,7 +511,7 @@ class Database {
     async createOrder(order) {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/orders`, {
+                const response = await fetch(`${this.apiURL}/orders`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(order)
@@ -529,7 +545,7 @@ class Database {
     async updateOrderStatus(orderId, status) {
         if (this.isRemoteAvailable) {
             try {
-                const response = await fetch(`${this.remoteURL}/orders/${orderId}/status`, {
+                const response = await fetch(`${this.apiURL}/orders/${orderId}/status`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
