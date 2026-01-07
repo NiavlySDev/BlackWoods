@@ -626,6 +626,7 @@ section {
     background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
     transition: all 0.5s ease;
     transform: rotate(45deg);
+    pointer-events: none;
 }
 
 .step-card:hover::before {
