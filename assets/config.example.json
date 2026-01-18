@@ -1,11 +1,21 @@
 {
-    "discordWebhook": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
-    "mentionRoleId": "YOUR_ROLE_ID",
-    "database": {
-        "host": "your-mysql-host.com",
-        "port": 3306,
-        "database": "your_database_name",
-        "user": "your_database_user",
-        "password": "your_database_password"
+    "app": {
+        "name": "Black Woods Restaurant",
+        "version": "1.0.0",
+        "environment": "production"
+    },
+    "api": {
+        "baseUrl": "/api",
+        "timeout": 30000
+    },
+    "features": {
+        "discordNotifications": true,
+        "autoRefresh": true,
+        "refreshInterval": 30000
+    },
+    "ui": {
+        "theme": "dark",
+        "language": "fr",
+        "itemsPerPage": 20
     }
 }

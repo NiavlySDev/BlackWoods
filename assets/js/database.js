@@ -29,8 +29,19 @@ class Database {
         try {
             const response = await fetch('../assets/config.json');
             this.config = await response.json();
+            
+            // Appliquer la configuration
+            if (this.config.api && this.config.api.baseUrl) {
+                this.apiURL = window.location.origin + this.config.api.baseUrl;
+            }
         } catch (error) {
-            throw new Error('Impossible de charger la configuration');
+            console.warn('Configuration non trouvée, utilisation des valeurs par défaut');
+            this.config = {
+                app: { name: 'Black Woods Restaurant', version: '1.0.0' },
+                api: { baseUrl: '/api', timeout: 30000 },
+                features: { discordNotifications: true, autoRefresh: true, refreshInterval: 30000 },
+                ui: { theme: 'dark', language: 'fr', itemsPerPage: 20 }
+            };
         }
     }
 
