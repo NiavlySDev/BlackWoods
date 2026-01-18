@@ -1,21 +1,9 @@
 {
-    "app": {
-        "name": "Black Woods Restaurant",
-        "version": "1.0.0",
-        "environment": "production"
-    },
-    "api": {
-        "baseUrl": "/api",
-        "timeout": 30000
-    },
-    "features": {
-        "discordNotifications": true,
-        "autoRefresh": true,
-        "refreshInterval": 30000
-    },
-    "ui": {
-        "theme": "dark",
-        "language": "fr",
-        "itemsPerPage": 20
+    "database": {
+        "host": "YOUR_HOST_HERE",
+        "port": 3306,
+        "database": "YOUR_DATABASE_NAME_HERE",
+        "user": "YOUR_DATABASE_USER_HERE",
+        "password": "YOUR_DATABASE_PASSWORD_HERE"
     }
 }
